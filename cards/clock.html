@@ -1,106 +1,158 @@
-<HTML>
-	<HEAD>
-		<style>
-			.clockBorder {
-				width: 180px;
-				height: 180px;
-				border-radius: 100px;
-				border-width: 4px;
-				border-color: gray;
-				border-style: solid;
-				position: relative;
-			}
-			.armVertex {
-				width: 15px;
-				height: 15px;
-				border-radius: 10px;
-				background-color: black;
-				position: absolute;
-				top: 83px;
-				left: 83px;
-			}
-			.numberText {
-				position: absolute;
-				color: rgb(243, 13, 13);	
-				font-weight: bold;
-				font-size: 24px;
-			}
-			.twelve {
-				top: 5px;
-				left: 77px;
-			}
-			.three {
-				top: 77px;
-				left: 167px;
-			}
-			.six {
-				top: 155px;
-				left: 84px;
-			}
-			.nine {
-				top: 77px;
-				left: 5px;
-			}
-			.hourArm {
-				width: 3px;
-				height: 50px;
-				position:absolute;
-				top: 40px;
-				left: 90px;
-				background-color: black;
-				transform-origin: bottom;
-				transform: rotate(0deg);
-			}
-			.minuteArm {
-				width: 2px;
-				height: 70px;
-				position:absolute;
-				top: 20px;
-				left: 90px;
-				background-color: black;
-				transform-origin: bottom;
-				transform: rotate(0deg);
-			}
-			.secondArm {
-				width: 1px;
-				height: 85px;
-				position:absolute;
-				top: 5px;
-				left: 90px;
-				background-color: black;
-				transform-origin: bottom;
-				transform: rotate(0deg);
-			}
-		</style>
-		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-	</HEAD>
-	<BODY>
-		<div class="clockBorder">
-			<div class="armVertex"></div>
-			<div class="hourArm"></div>
-			<div class="minuteArm"></div>
-			<div class="secondArm"></div>
-			<div class="numberText twelve">12</div>	
-			<div class="numberText three">3</div>
-			<div class="numberText six">6</div>
-			<div class="numberText nine">9</div>
-		</div>
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- Styling the clock face and arms -->
+	<style>
+		/* Make the entire page centered and nice looking */
+		body {
+			background-color: #f4f4f4;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			margin: 0;
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		}
 
-		<script>
-			function tick() {
-				var time = new Date();
-				var hours = time.getHours();
-				var minutes = time.getMinutes();
-				var seconds = time.getSeconds();
+		/* The outer circle (clock border) */
+		.clockBorder {
+			width: 200px;
+			height: 200px;
+			border-radius: 50%; /* Make it a perfect circle */
+			border: 6px solid #333; /* Black border */
+			background: radial-gradient(circle, #fff 60%, #e0e0e0); /* Subtle 3D effect */
+			box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Drop shadow for depth */
+			position: relative;
+		}
 
-				$('.secondArm').css('transform', 'rotate(' + (360 * seconds / 60) + 'deg)');
-				$('.minuteArm').css('transform', 'rotate(' + (360 * minutes / 60) + 'deg)');
-				$('.hourArm').css('transform', 'rotate(' + (360 * hours / 12) + 'deg)');
+		/* The center "pin" or hub where all arms rotate from */
+		.armVertex {
+			width: 16px;
+			height: 16px;
+			border-radius: 50%;
+			background-color: #333;
+			position: absolute;
+			top: 92px;
+			left: 92px;
+			z-index: 10;
+			box-shadow: 0 0 5px rgba(0,0,0,0.5); /* Soft glow for floating look */
+		}
 
-				console.log(seconds + ' seconds');
+		/* Common styles for all clock numbers */
+		.numberText {
+			position: absolute;
+			color: #333;
+			font-weight: 600;
+			font-size: 20px;
+			user-select: none; /* Prevent dragging/selecting text */
+		}
+
+		/* Common styles for all three arms */
+		.hourArm, .minuteArm, .secondArm {
+			position: absolute;
+			left: 99px; /* Align center horizontally (half of clock width) */
+			transform-origin: bottom; /* Rotate around the bottom of the arm */
+			transform: rotate(0deg); /* Initial position */
+			border-radius: 2px;
+			transition: transform 0.5s ease-in-out; /* Smooth rotation */
+			box-shadow: 0 0 5px rgba(0,0,0,0.2); /* Slight 3D effect */
+		}
+
+		/* Hour hand */
+		.hourArm {
+			width: 5px;
+			height: 50px;
+			top: 50px;
+			background-color: #333;
+			z-index: 3; /* Below minute and second hands */
+		}
+
+		/* Minute hand */
+		.minuteArm {
+			width: 3px;
+			height: 70px;
+			top: 30px;
+			background-color: #444;
+			z-index: 4;
+		}
+
+		/* Second hand (red and long) */
+		.secondArm {
+			width: 2px;
+			height: 85px;
+			top: 15px;
+			background-color: #e74c3c;
+			z-index: 5;
+		}
+	</style>
+
+	<!-- Load jQuery from CDN FIRST. You need to have this before adding another script -->
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+	<!-- Clock logic (tick and number rendering) -->
+	<script>
+		// This function updates the angles of each arm based on the current time
+		function tick() {
+			const time = new Date();
+			const hours = time.getHours();
+			const minutes = time.getMinutes();
+			const seconds = time.getSeconds();
+
+			// Convert time to angles
+			const secondDeg = 6 * seconds; // 360 degrees / 60 seconds
+			const minuteDeg = 6 * (minutes + seconds / 60); // Add seconds for smoothness
+			const hourDeg = 30 * (hours % 12 + minutes / 60); // 360 / 12 + fractional minutes
+
+			// Rotate each arm using jQuery
+			$('.secondArm').css('transform', 'rotate(' + secondDeg + 'deg)');
+			$('.minuteArm').css('transform', 'rotate(' + minuteDeg + 'deg)');
+			$('.hourArm').css('transform', 'rotate(' + hourDeg + 'deg)');
+		}
+
+		// This function generates and places all 12 numbers (1–12) around the clock face
+		function addClockNumbers() {
+			const clock = document.querySelector('.clockBorder');
+			const radius = 85; // Radius of the circle to place numbers around
+			const centerX = 100;
+			const centerY = 100;
+
+			for (let i = 1; i <= 12; i++) {
+				// Calculate position for each number based on angle
+				const angle = (i - 3) * (Math.PI * 2) / 12; // Subtract 3 to rotate so 12 is at top
+				const x = centerX + radius * Math.cos(angle) - 10; // Adjust left offset for centering
+				const y = centerY + radius * Math.sin(angle) - 12; // Adjust top offset for centering
+
+				// Create a number element
+				const number = document.createElement('div');
+				number.className = 'numberText';
+				number.style.left = `${x}px`;
+				number.style.top = `${y}px`;
+				number.innerText = i;
+
+				// Add the number to the clock
+				clock.appendChild(number);
 			}
-			// Update arm angles every second (1000 milliseconds).
-			setInterval(tick, 1000);
-		</script>
-	</BODY>
-</HTML>
+		}
+
+		// Run after the document is fully loaded
+		$(document).ready(function () {
+			addClockNumbers();   // Place all the numbers
+			tick();              // Update the clock hands immediately
+			setInterval(tick, 1000); // Continue updating every second
+		});
+	</script>
+</head>
+
+<body>
+	<!-- The clock container -->
+	<div class="clockBorder">
+		<!-- Center hub where the arms rotate from -->
+		<div class="armVertex"></div>
+
+		<!-- Clock hands -->
+		<div class="hourArm"></div>
+		<div class="minuteArm"></div>
+		<div class="secondArm"></div>
+	</div>
+</body>
+</html>
