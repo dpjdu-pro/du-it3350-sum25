@@ -4,22 +4,22 @@
 		<script src="../js/utils.js"></script>
 		
 		<style>
-			.randomCatImage {
+			.randomBirdImage {
 				width: 180px;
 				height: 180px;
 			}
 		</style>
 		<script>
 			// Web resources may change/disappear. Substitute as needed.
-			// https://dog.ceo/dog-api/
-			// discovered via https://publicapis.dev/search?q=dogs
+			// https://img.freepik.com/premium-photo/cute-birds_729089-352.jpg
+			// discovered via https://www.bing.com/images/search?view=detailV2&ccid=dc4zvb6p&id=6065C93798A5FFAA320DAD9672F649A50F7E3F2A&thid=OIP.dc4zvb6p7L9i8zbWJOwfjgAAAA&mediaurl=https%3A%2F%2Fimg.freepik.com%2Fpremium-photo%2Fcute-birds_729089-352.jpg&cdnurl=https%3A%2F%2Fth.bing.com%2Fth%2Fid%2FR.75ce33bdbea9ecbf62f336d624ec1f8e%3Frik%3DKj9%252bD6VJ9nKWrQ%26pid%3DImgRaw%26r%3D0&exph=626&expw=470&q=cute+birds&simid=608022857506696288&FORM=IRPRST&ck=1F197E9416B53744C44BE960CAD41F5B&selectedIndex=8&itb=0&cw=1375&ch=664&ajaxhist=0&ajaxserp=0
 			getResponse(
-				'https://api.thecatapi.com/v1/images/search', 
-				(response) => $('.randomCatImage').attr('src', response[0].url)
+				'https://img.freepik.com/premium-photo/cute-birds_729089-352.jpg', 
+				(response) => $('.randomBirdImage').attr('src', response[0].url)
 			);
 		</script>
 	</HEAD>
 	<BODY>
-		<img class='randomCatImage' />
+		<img class='randomBirdImage' />
 	</BODY>
 </HTML>
