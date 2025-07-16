@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Nutritionix Food API</title>
+  <style>
+        /* Basic styling for the card body */
+        body {
+            font-family: "times", sans-serif; /* Simple font */
+            font-size: 12px;
+            background-color: #daa8a8; /* Changed background color to light coral like my mockup */
+            display: flex;
+			flex-direction: column;
+            justify-content: left;
+            align-items: left;
+            height: 100vh; /* Full viewport height */
+            margin: 0;
+            padding: 5px; /*Further reduced padding for overall top margin compression */
+            box-sizing: border-box;
+            overflow: hidden; /* Prevent scrollbars if content slightly overflows */
+        }
+        .card {
+            width: 190 px;
+            height: 190 px;
+            background-color: #f0f0f0; /* Light background for the card */
+            padding: 10px;
+            font-size: 11px;
+            border-radius: 8px;
+            box-shadow: 0 0x 5x rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            max-height: 200px;
+            overflow-y: auto;
+             }
+.card h2 {
+  font-size: 13px;
+  margin: 0 0 6px;
+}
+
+.card table {
+  width: 100%;
+  font-size: 10px;
+  border-collapse: collapse;
+}
+
+.card td {
+  padding: 3px;
+  border-bottom: 1px solid #ddd;
+}
+		/*Centers the title above the button*/
+		h1 {
+  margin: 4 px 0;
+  margin-bottom: 4px;
+    text-align: left;
+  font-size: 14px;
+  font-weight: bold;
+}
+       </style>
+		</head>
+<body>
+  <h1>Search Foods:</h1>
+  <input type="text" id="foodInput" placeholder="For example: 1 apple" />
+  <button onclick="searchFood()">Search</button>
+  <div id="results"></div>
+<script src="../js/food.js"></script>
+</body>
+</html>
