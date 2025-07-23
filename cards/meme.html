@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+    <HEAD>
+		<style>
+			.blueText {
+				color: blue;
+			}
+		</style>
+	</head>
+    <body>
+        <!-- This is a template for creating a new card. Copy this file and add your content inside the <body> tag. -->
+        <img id="memeImg" src="" alt="Random Meme" width="400" />
+        <script>
+            fetch('https://meme-api.com/gimme/wholesomememes')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('memeImg').src = data.url;
+                });
+        </script>
+    </body>
+</html>
