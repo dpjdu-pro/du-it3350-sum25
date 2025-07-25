@@ -6,8 +6,9 @@
         /* Basic styling for the body */
         body {
             font-family: "Inter", sans-serif; /* Simple font */
-            background-color: #ffffff; /* Changed background color to white */
+            background-color: #d97c7c; /* Changed background color to white */
             display: flex;
+			flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh; /* Full viewport height */
@@ -16,33 +17,18 @@
             box-sizing: border-box;
             overflow: hidden; /* Prevent scrollbars if content slightly overflows */
         }
-        /* Card container styling to fit 200px by 200px */
-        .card-container {
-            max-width: 190px; /* Adjusted to fit within 200px with padding */
-            max-height: 190px; /* Adjusted to fit within 200px with padding */
-            width: 100%;
-            height: 100%; /* Allow it to shrink */
-            background-color: #ffffff;
-            border-radius: 0.75rem; /* Slightly smaller border-radius */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Even simpler shadow */
-            padding: 0.5rem; /* Reduced padding for more compression */
-            text-align: center;
-            display: flex; /* Use flexbox for internal layout */
-            flex-direction: column;
-            /* Changed to flex-start to allow tighter packing from the top */
-            justify-content: flex-start;
-            overflow: hidden; /* Hide overflowing content */
-        }
-        .card-title {
-            font-size: 1rem; /* Significantly smaller font size */
-            font-weight: bold;
-            color: #1f2937;
-            margin-bottom: 0.3rem; /* Further reduced margin to compress space */
-		}
-		</style>
+		/*Centers the title above the button*/
+		h1 {
+  text-align: center;
+}
+/* Styling for the button */
+#MealButton {
+  font-size: 20px;
+}
+       </style>
 		</head>
 <body>
-  <h1>Get a Random Meal</h1>
+  <h1>Get a Random Meal Recipe</h1>
   <button id="MealButton">Surprise Me!</button>
   <div id="mealcard"></div>
 <script>
@@ -50,10 +36,10 @@
     fetch("https://www.themealdb.com/api/json/v1/1/random.php")
       .then(response => response.json())
       .then(data => {
-        const meal = data.meals[0];
+		// Pulling my specific data from the JSON response
+		const meal = data.meals[0];
         const mealName = meal.strMeal;
         const mealId = meal.idMeal;
-
         // Open the recipe page in a new tab
         const url = `https://www.themealdb.com/meal/${mealId}`;
         window.open(url, '_blank');
