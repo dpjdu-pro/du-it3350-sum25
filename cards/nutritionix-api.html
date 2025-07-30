@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Nutritionix Food API</title>
+  <style>
+        /* Basic styling for the card body */
+        body {
+            font-family: "times", sans-serif; /* Simple font */
+            font-size: 11px;
+            background-color: #daa8a8; /* Changed background color to light coral like my mockup */
+            display: flex;
+			flex-direction: column;
+            justify-content: left;
+            align-items: center;
+            height: 200px;
+            width: 200px;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow: hidden; /* Prevent scrollbars if content slightly overflows */
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            background-color: #c9c3c3;
+            padding: 8px;
+            font-size: 12px;
+            border-radius: 16px;
+            box-shadow: 0 0 5x rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            max-height: 200px;
+            overflow-y: auto;
+             }
+.card h2 {
+  font-size: 12px;
+  margin: 0 0 6px;
+  margin-bottom: 4px;
+}
+h1 {
+  margin: 4 px;
+  margin-bottom: 2px;
+    text-align: center;
+  font-size: 14px;
+  font-weight: bold; 
+}
+.input-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  margin-bottom: 2px;
+    }
+    .input-container input {
+  border-radius: 8px; 
+  padding: 2px;
+  border: 1px solid #0c0c0c;
+  background-color: #c9c3c3;
+  color: black;
+}
+       </style>
+		</head>
+<body>
+  <h1>Search Foods:</h1>
+  <div class="input-container"> <input type="text" id="foodInput" placeholder="For example: 1 apple" />
+  <button onclick="searchFood()">Search</button>
+  </div>
+  <div id="results"></div>
+<script src="../js/food.js"></script>
+Powered by: <img src="https://static.nutritionix.com/nix_assets/images/nutritionix_small.png" alt="Nutritionix Logo" style="width: 50px; height: 20px; margin-top: 4px;" />
+</body>
+</html>
