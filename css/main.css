@@ -6,13 +6,22 @@
 
 iframe.card {
 	border-radius: 15px;
-	border-width: 2;
-	border-color: black;
+	border-width: 2px;
+	border-color: #6B4F3A; /* Warm brown */
 	border-style: solid;
 	width: 200px;
 	height: 200px;
-  	display: flex;
-  	justify-content: center;
-  	align-items: center;
-  	margin: 20px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 20px;
+	background-color: #E9E3D0; /* Soft sand */
+	box-shadow: 0 4px 8px rgba(107, 79, 58, 0.3);
+	transition: transform 0.3s ease;
+}
+
+iframe.card:hover {
+	transform: scale(1.05);
+	border-color: #8A7B5C; /* Olive brown for hover */
+	background-color: #D6C3A1; /* Warmer tan on hover */
 }
