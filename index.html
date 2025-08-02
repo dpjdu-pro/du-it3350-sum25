@@ -1,41 +1,61 @@
-<HTML>
-	<HEAD>
-		<link rel="stylesheet" href="css/main.css">
-		<script
-  src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-		<script src="js/utils.js"></script>
-		<!-- Google tag (gtag.js) -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=G-10MPPHLD10"></script>
-		<script>
-  			window.dataLayer = window.dataLayer || [];
-  			function gtag(){dataLayer.push(arguments);}
-  			gtag('js', new Date());
-  			gtag('config', 'G-10MPPHLD10');
-		</script>
-		<TITLE>
-			IT-3350 Dashboard
-		</TITLE>
-	</HEAD>
-		
-	<BODY>
-		<CENTER><H3>Web Widget Dashboard</H3></CENTER>
-		<div class='cardContainer'>
-			<iframe class="card" scrolling="no" src="cards/clock.html"></iframe>
-			<iframe class="card" scrolling="no" src="cards/random_dog.html"></iframe>
-			<iframe class="card" scrolling="no" src="cards/tron.html"></iframe>
-      <iframe class="card" scrolling="no" src="cards/currency.html"></iframe>   
-			<iframe class="card" scrolling="no" src="cards/quote.html"></iframe>
-			<iframe class="card" scrolling="no" src="cards/Date$Time.html"></iframe>
-			<iframe class="card" scrolling="no" style='width:400px;' src="cards/temperature.html"></iframe>    
-			<iframe class="card" scrolling="no" style='width:400px;' src="cards/temperature.html"></iframe>
-			<iframe class="card" scrolling="no" src="cards/newcard_arg-template1.html"></iframe>
-      <iframe class="card" scrolling="no" src="cards/newcard_zaid.html"></iframe>
-      <iframe class="card" scrolling="no" src="cards/newcard_derrick.html"></iframe>
-      <iframe class="card" scrolling="no" src="cards/randomrecipe.html"></iframe>
-	    <iframe class="card" scrolling="yes" style='width:400px;' src="cards/NIST-NVD.html"></iframe>
-      <iframe class="card" scrolling="no" src="cards/rt-apod.html"></iframe>
 
-		</div>
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="css/main.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/utils.js"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-10MPPHLD10"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-10MPPHLD10');
+  </script>
+  <title>IT-3350 Dashboard</title>
+
+  <script>
+    // Resize iframes dynamically based on their content
+    function resizeIframes() {
+      const iframes = document.querySelectorAll('iframe.card');
+      iframes.forEach(iframe => {
+        iframe.addEventListener('load', () => {
+          try {
+            const doc = iframe.contentWindow.document;
+            iframe.style.height = doc.body.scrollHeight + 'px';
+          } catch (e) {
+            console.warn('Could not access iframe content for resizing (CORS restriction).');
+          }
+        });
+      });
+    }
+    window.onload = resizeIframes;
+  </script>
+</head>
+
+<body>
+  <center><h3>Web Widget Dashboard</h3></center>
+  <div class="cardContainer">
+    <iframe class="card" scrolling="no" style="width:450px; height:650px;" src="cards/catsapi.html"></iframe>
+    <iframe class="card" scrolling="no" src="cards/clock.html"></iframe>
+    <iframe class="card" scrolling="no" src="cards/random_dog.html"></iframe>
+    <iframe class="card" scrolling="no" src="cards/tron.html"></iframe>
+    <iframe class="card" scrolling="no" src="cards/currency.html"></iframe>
+    <iframe class="card" scrolling="no" style="width:400px;" src="cards/temperature.html"></iframe>
+    <iframe class="card" scrolling="no" src="cards/randomrecipe.html"></iframe>
+    <iframe class="card" scrolling="no" src="cards/nutritionix-api.html"></iframe>
+    <iframe class="card" scrolling="no" src="cards/quote.html"></iframe>
+    <iframe class="card" scrolling="no" src="cards/Date$Time.html"></iframe>
+    <iframe class="card" scrolling="no" src="cards/newcard_arg-template1.html"></iframe>
+    <iframe class="card" scrolling="no" src="cards/newcard_zaid.html"></iframe>
+    <iframe class="card" scrolling="no" src="cards/newcard_derrick.html"></iframe>
+    <iframe class="card" scrolling="yes" style='width:400px;' src="cards/NIST-NVD.html"></iframe>
+    <iframe class="card" scrolling="no" src="cards/rt-apod.html"></iframe>
+    <iframe class="card" scrolling="no" src="cards/dad_joke.html"></iframe>
+    <iframe class="card" scrolling="no" src="cards/newcard_zaid.html"></iframe>
+    <iframe class="card" scrolling="no" src="cards/newcard_derrick.html"></iframe>
+</div>
 	</BODY>
 </HTML>
