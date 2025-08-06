@@ -1,0 +1,25 @@
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.widget {
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  width: 250px;
+  transition: background-color 0.3s;
+}
+
+.widget.good {
+  background-color: #a8e6a3;
+}
+.widget.moderate {
+  background-color: #fff3a3;
+}
+.widget.unhealthy {
+  background-color: #f8a5a5;
+}

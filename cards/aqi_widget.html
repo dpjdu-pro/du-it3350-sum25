@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AQI Widget</title>
+  <link rel="stylesheet" href="../css/aqi_style.css">
+</head>
+<body>
+  <div class="widget" id="aqiWidget">
+    <h2 id="city">City: --</h2>
+    <p id="aqi">AQI: --</p>
+    <p id="status">Status: --</p>
+    <img id="icon" src="" alt="" style="width: 50px; display: none;">
+    <input type="text" id="aqiInput" placeholder="Enter AQI (0–300)">
+    <button onclick="handleCustomAQI()">Submit</button>
+    <button onclick="loadAQIData()">Random</button>
+  </div>
+
+  <script src="../js/aqi_script.js"></script>
+</body>
+</html>
