@@ -15,8 +15,20 @@
 			});
 
 			function doComputation() {
-				var result = $('#usdValue').val() * conversionMap[$('#currency').val()];
-				$('#endValue').val(result.toFixed(2));
+				const inputValue = $('#usdValue').val();
+
+ 
+// Check for any special characters
+  const specialCharRegex = /[^a-zA-Z0-9\s.]/;
+
+  if (specialCharRegex.test(inputValue)) {
+    alert("Please do not enter special characters in the input field.");
+    $('#usdValue').val(''); // Optional: clear the input
+    return;
+  }
+
+  const result = inputValue * conversionMap[$('#currency').val()];
+  $('#endValue').val(result.toFixed(2));
 			}
 		</script>
 	</HEAD>
