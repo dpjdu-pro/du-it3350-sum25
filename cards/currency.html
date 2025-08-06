@@ -1,42 +1,88 @@
-<HTML>
-	<HEAD>
-		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-		<script src="../js/utils.js"></script>
-		
-		<script>
-			var conversionMap = new Array();
-			// Web resources may change/disappear. Substitute as needed.
-			// https://github.com/fawazahmed0/exchange-api?tab=readme-ov-file
-			// discovered via https://publicapis.dev/category/currency-exchange
-			getResponse('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json', (response) => {
-				for (const [key, value] of Object.entries(response.usd)) {
-					conversionMap[key] = value;
-				}
-			});
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Currency Exchange Rates</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f7f7f7;
+    }
+    #card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 400px;
+      margin: auto;
+    }
+    #rates {
+      margin-top: 10px;
+    }
+    .rate {
+      margin: 5px 0;
+    }
+    #updated {
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: gray;
+    }
+    #error {
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
 
-			function doComputation() {
-				var result = $('#usdValue').val() * conversionMap[$('#currency').val()];
-				$('#endValue').val(result.toFixed(2));
-			}
-		</script>
-	</HEAD>
-	<BODY>
-		<form style='text-align:center;'>
-			<p><B>Currency Converter</B></p>
-			<input type='text' id='usdValue' style='width:60px;'
-				onkeyup="doComputation();" />
-				<span style='font-size:22px;'> USD</span>
-			<br/><span style='font-size:48px;'>=</span>
-			<br/>
-			<input type='text' id='endValue' style='width:60px;'> 
-			<SELECT id='currency' onchange="doComputation();">
-				<OPTION value='eur'>EUR</OPTION>
-				<OPTION value='gbp'>GBP</OPTION>
-				<OPTION value='chf'>CHF</OPTION>
-				<OPTION value='jpy'>JPY</OPTION>
-				<OPTION value='cny'>CNY</OPTION>
-				<OPTION value='aud'>AUD</OPTION>
-			</SELECT>
-		</form>
-	</BODY>
-</HTML>
+<div id="card">
+  <h2>USD Exchange Rates</h2>
+  <button onclick="fetchRates()">Refresh Rates</button>
+  <div id="rates"></div>
+  <div id="updated"></div>
+  <div id="error"></div>
+</div>
+
+<script>
+  const API_KEY = '43bf953ec1f0dc5b88882f77419d0745';
+  const API_URL = `https://open.exchangerate-api.com/v6/latest?base=USD&apikey=${API_KEY}`;
+  const currencies = ['EUR', 'GBP', 'CAD', 'JPY'];
+  let intervalId;
+
+  async function fetchRates() {
+    document.getElementById('error').textContent = '';
+    try {
+      const res = await fetch(API_URL);
+      if (!res.ok) throw new Error('API request failed');
+
+      const data = await res.json();
+      displayRates(data);
+    } catch (error) {
+      document.getElementById('error').textContent = 'Failed to load exchange rates.';
+      console.error(error);
+    }
+  }
+
+  function displayRates(data) {
+    const ratesDiv = document.getElementById('rates');
+    ratesDiv.innerHTML = '';
+    currencies.forEach(curr => {
+      const rate = data.rates[curr];
+      const el = document.createElement('div');
+      el.className = 'rate';
+      el.textContent = `1 USD = ${rate} ${curr}`;
+      ratesDiv.appendChild(el);
+    });
+
+    const now = new Date();
+    document.getElementById('updated').textContent = `Last updated: ${now.toLocaleString()}`;
+  }
+
+  // Initial fetch and auto-refresh every 10 mins
+  fetchRates();
+  intervalId = setInterval(fetchRates, 10 * 60 * 1000);
+</script>
+
+</body>
+</html>
