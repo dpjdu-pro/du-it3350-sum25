@@ -69,7 +69,17 @@ h1 {
   <button onclick="searchFood()">Search</button>
   </div>
   <div id="results"></div>
-<script src="../js/food.js"></script>
+<script src="../js/food.js">
+</script>
+<script>
+  const originalSearchFood = searchFood;
+  window.searchFood = function () {
+    const inputField = document.getElementById('foodInput');
+    const inputValue = inputField.value.trim();
+    console.log('📥 User entered input:', inputValue);
+    originalSearchFood();
+  };
+</script>
 Powered by: <img src="https://static.nutritionix.com/nix_assets/images/nutritionix_small.png" alt="Nutritionix Logo" style="width: 50px; height: 20px; margin-top: 4px;" />
 </body>
 </html>
