@@ -1,10 +1,10 @@
 console.log("✅ Connected to food.js!");
+console.log("This file is used to search for food items using the Nutritionix API.");
 const appId = "a4d8d4a4";     // Replace with your Nutritionix App ID
 const appKey = "b05d803a2597212e9a749bb57c321855";   // Replace with your Nutritionix App Key
 
 function searchFood() {
   const food = document.getElementById("foodInput").value;
-
   fetch("https://trackapi.nutritionix.com/v2/natural/nutrients", {
     method: "POST",
     headers: {
@@ -26,11 +26,12 @@ function searchFood() {
         Protein: ${item.nf_protein}g
       </div>
     `;
-
+alert("Food found: " + item.food_name);
     document.getElementById("results").innerHTML = description;
   })
   .catch(err => {
     document.getElementById("results").innerHTML = "Oops! Something went wrong.";
     console.error(err);
+    alert("No food found. Please try again.");
   });
 }
