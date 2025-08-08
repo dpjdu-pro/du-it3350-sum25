@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-    <HEAD>
+    <head>
 		<style>
 			.header {
 				color: rgb(255, 255, 255);
 				font-size:medium;
 				background-color: rgba(0, 0, 170, 0.5);
 				border-radius: 10px;
+				display: flex;
 				font-weight: bold;
 				text-align: center;
+				position: relative;
 			}
 			.buttontable {
 				display: flex;
@@ -34,18 +36,38 @@
 				background-color: rgb(0, 0, 120);
 				border-color: rgb(198, 198, 198);
 			}
+			.img {
+				max-width: 200px;
+				height: auto;
+				object-fit: contain;
+				position:absolute;
+				z-index: -1;
+				left: 0;
+				top: 0;
+			}
 		</style>
+
 	</head>
     <body>
+		<div class="img">
+			<img id="apodImg" style = 'max-width:200px'>
+		</div>
         <h1 class="header">
 			NASA </br>
 			Astronomy Picture of the Day
-		</h1>			
-			<div class="buttontable">
-				<button type="button" class="button">&larr;</button>
-				<button type="button" class="button" style="margin-left: 12px;">&rarr;</button>
-				<button type="button" class="button" style="margin-left: 12px;">&loz;</button>
-				<button type="button" class="button" style="margin-left: 12px;">&darr;</button>
-			</div>
+		</h1>
+
+		<script>
+			const apodApi = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY';
+				fetch(apodApi)
+					.then(response => response.json())
+					.then(json=>{
+						console.log(json);
+						const nasaPic = document.getElementById('apodImg');
+						nasaPic.src = json.url;
+					})
+					.catch(error => console.error('Could not fetch APOD. Error:', error));	
+		</script>
+
     </body>
 </html>
