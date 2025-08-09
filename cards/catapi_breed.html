@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Cat API - Breed Filter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    img {
+      max-width: 400px;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      margin-top: 20px;
+    }
+    button, select {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    select {
+      width: 250px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Cat Breed Selector 🐱</h1>
+
+  <div>
+    <label for="breed-select">Choose a breed:</label><br>
+    <select id="breed-select">
+      <option value="">-- Random --</option>
+    </select>
+  </div>
+
+  <div>
+    <button onclick="getCatByBreed()">Show Cat</button>
+  </div>
+
+  <div id="cat-container">
+    <img id="cat-image" src="" alt="Cat">
+  </div>
+
+  <script>
+    const API_KEY = "live_AufUhdmyATJ9OTVBPKoCzAjOzIufukMLeMQJQQ5fA5dAj24nvGOCA6vtJYAo9IsK";
+    const BASE_URL = "https://api.thecatapi.com/v1";
+    const breedSelect = document.getElementById("breed-select");
+
+    // Load breeds into dropdown
+    async function loadBreeds() {
+      try {
+        const res = await fetch(`${BASE_URL}/breeds`, {
+          headers: { "x-api-key": API_KEY }
+        });
+        const breeds = await res.json();
+        breeds.forEach(breed => {
+          const option = document.createElement("option");
+          option.value = breed.id;
+          option.textContent = breed.name;
+          breedSelect.appendChild(option);
+        });
+      } catch (err) {
+        console.error("Error loading breeds:", err);
+      }
+    }
+
+    // Get cat image by breed or random if no breed selected
+    async function getCatByBreed() {
+      const breedId = breedSelect.value;
+      const url = breedId
+        ? `${BASE_URL}/images/search?breed_ids=${breedId}`
+        : `${BASE_URL}/images/search`;
+
+      try {
+        const res = await fetch(url, {
+          headers: { "x-api-key": API_KEY }
+        });
+        const data = await res.json();
+        document.getElementById("cat-image").src = data[0].url;
+      } catch (err) {
+        console.error("Error fetching cat:", err);
+      }
+    }
+
+    // Initialize
+    window.onload = async () => {
+      await loadBreeds();
+      await getCatByBreed(); // show random cat on load
+    };
+  </script>
+</body>
+</html>

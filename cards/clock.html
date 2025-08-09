@@ -20,8 +20,8 @@
 				left: 83px;
 			}
 			.numberText {
-				position: absolute;
-				color: rgb(128, 0, 128);	
+				position: absolute; 
+			   color: rgb(0, 149, 255);
 				font-weight: bold;
 				font-size: 24px;
 			}
@@ -93,9 +93,15 @@
 				var minutes = time.getMinutes();
 				var seconds = time.getSeconds();
 
-				$('.secondArm').css('transform', 'rotate(' + (360 * seconds / 60) + 'deg)');
-				$('.minuteArm').css('transform', 'rotate(' + (360 * minutes / 60) + 'deg)');
-				$('.hourArm').css('transform', 'rotate(' + (360 * hours / 12) + 'deg)');
+
+			   // Calculate hour hand with minute offset for smoothness
+			   var hourAngle = 30 * (hours % 12) + 0.5 * minutes;
+			   var minuteAngle = 6 * minutes + 0.1 * seconds;
+			   var secondAngle = 6 * seconds;
+
+			   $('.secondArm').css('transform', 'rotate(' + secondAngle + 'deg)');
+			   $('.minuteArm').css('transform', 'rotate(' + minuteAngle + 'deg)');
+			   $('.hourArm').css('transform', 'rotate(' + hourAngle + 'deg)');
 
 				console.log(seconds + ' seconds');
 			}

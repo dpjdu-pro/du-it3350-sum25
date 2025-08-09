@@ -16,6 +16,7 @@
       flex-direction: column;
       gap: 6px;
       border: 1px solid #000;
+      border: 1px solid #000; /* optional: to match the look in your screenshot */
     }
     .joke-title { font-size: 1.1em; text-align: center; font-weight: bold; margin-bottom: 4px; }
     .joke-setup { margin-bottom: 6px; text-align: center; }
@@ -93,5 +94,85 @@
       downBtn.addEventListener("click",() => handleVote("down"));
     });
   </script>
+=======
+ <script>
+  document.addEventListener("DOMContentLoaded", async function () {
+    console.group("DadJokeCard");
+    console.log("[init] DOM ready @", new Date().toISOString());
+
+    const setupEl   = document.getElementById("setup");
+    const upBtn     = document.getElementById("thumbs-up");
+    const downBtn   = document.getElementById("thumbs-down");
+    const resultEl  = document.getElementById("vote-result");
+
+    console.log("[refs] elements", {
+      hasSetup: !!setupEl,
+      hasUpBtn: !!upBtn,
+      hasDownBtn: !!downBtn,
+      hasResult: !!resultEl
+    });
+
+    // If buttons exist but look invisible, force labels so you can *see* them
+    if (upBtn && !upBtn.textContent)   upBtn.textContent = "👍";
+    if (downBtn && !downBtn.textContent) downBtn.textContent = "👎";
+
+    let jokeLoaded = false;
+    let data = null;
+
+    console.time("[fetch] icanhazdadjoke");
+    try {
+      console.log("[fetch] requesting https://icanhazdadjoke.com/");
+      const res = await fetch("https://icanhazdadjoke.com/", {
+        headers: { Accept: "application/json" }
+      });
+      console.log("[fetch] status", res.status, res.ok);
+
+      // Helpful when CORS/network fails
+      if (!res.ok) {
+        const text = await res.text().catch(() => "(no body)");
+        console.warn("[fetch] not ok, body:", text.slice(0, 200));
+        throw new Error("Bad response: " + res.status);
+      }
+
+      data = await res.json();
+      console.log("[data] payload", data); // { id, joke, status }
+
+      if (setupEl) setupEl.textContent = data.joke;
+      jokeLoaded = true;
+      console.log("[state] jokeLoaded =", jokeLoaded);
+    } catch (err) {
+      console.error("[error] fetch failed:", err);
+      if (setupEl) setupEl.textContent = "Oops! Could not load a joke.";
+    } finally {
+      console.timeEnd("[fetch] icanhazdadjoke");
+      console.groupEnd();
+    }
+
+    // Pause here so you can step through in Sources
+    debugger;
+
+    function handleVote(type) {
+      console.group("vote");
+      console.log("[click]", type, { jokeLoaded, hasResult: !!resultEl });
+      if (!jokeLoaded) {
+        console.warn("[guard] vote blocked: joke not loaded");
+        alert("Please wait for the joke to load.");
+        console.groupEnd();
+        return;
+      }
+      if (resultEl) {
+        resultEl.textContent = (type === "up") ? "😂 Glad you liked it!" : "😐 Maybe next one will be better.";
+        console.log("[resultText]", resultEl.textContent);
+      } else {
+        console.warn("[warn] no #vote-result element found");
+      }
+      console.groupEnd();
+    }
+
+    upBtn?.addEventListener("click",   () => handleVote("up"));
+    downBtn?.addEventListener("click", () => handleVote("down"));
+  });
+</script>
+
 </body>
 </html>

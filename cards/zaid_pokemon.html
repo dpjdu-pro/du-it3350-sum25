@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Pokémon Lookup</title>
+</head>
+<body>
+  <h1>Pokémon Lookup</h1>
+
+  <!-- Input box to type Pokémon name -->
+  <input id="pokeName" type="text" placeholder="Enter a Pokémon">
+  <!-- Button to trigger the fetch -->
+  <button onclick="getPokemon()">Search</button>
+  <!-- Area to show Pokémon info -->
+  <div id="pokemonInfo"></div>
+
+  <script>
+    // This function runs when the button is clicked
+    async function getPokemon() {
+      // Get the name typed by the user and convert it to lowercase
+      const name = document.getElementById('pokeName').value.toLowerCase();
+      console.log("User entered Pokémon name:", name); // Log the name entered by the user
+
+      // Create the API URL using the name
+      const url = `https://pokeapi.co/api/v2/pokemon/${name}`;
+      console.log("Constructed API URL:", url); // Log the full URL that will be fetched
+
+      try {
+        // Send a request to the API
+        const response = await fetch(url);
+        // If the response isn't OK (like 404), show an error
+        if (!response.ok) {
+          throw new Error("Try again please, or learn how to spell!");
+        }
+
+        // Parse the JSON data from the response
+        const data = await response.json();
+        console.log("Fetched Pokémon data from API:", data); // Log the full API response
+
+        // This will show the Pokémon's info
+        const html = `
+          <h2>${data.name.toUpperCase()}</h2>
+          <img src="${data.sprites.front_default}" alt="${data.name}">
+          <p><strong>Type:</strong> ${data.types.map(t => t.type.name).join(', ')}</p>
+          <p><strong>Height:</strong> ${data.height}</p>
+          <p><strong>Weight:</strong> ${data.weight}</p>
+        `;
+
+        // This will put the Pokémon info into the page
+        document.getElementById('pokemonInfo').innerHTML = html;
+
+      } catch (error) {
+        // Error = if something goes wrong, like the Pokémon not being found. It's also Red.
+        console.error("Error during fetch or data handling:", error); // Log the error to help with debugging
+        document.getElementById('pokemonInfo').innerHTML =
+          `<p style="color: red;">${error.message}</p>`;
+      }
+    }
+  </script>
+</body>
+</html>
