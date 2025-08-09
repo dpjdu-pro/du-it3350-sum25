@@ -15,13 +15,9 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
+      border: 1px solid #000; /* optional: to match the look in your screenshot */
     }
-    .joke-title {
-      font-size: 1.1em;
-      text-align: center;
-      font-weight: bold;
-      margin-bottom: 4px;
-    }
+    .joke-title { font-size: 1.1em; text-align: center; font-weight: bold; margin-bottom: 4px; }
     .joke-setup { margin-bottom: 6px; text-align: center; }
     .vote-buttons { display: flex; gap: 8px; justify-content: center; }
     .vote-buttons button { font-size: 1.1em; cursor: pointer; }
@@ -42,10 +38,10 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      const setupEl = document.getElementById("setup");
-      const upBtn = document.getElementById("thumbs-up");
-      const downBtn = document.getElementById("thumbs-down");
-      const resultEl = document.getElementById("vote-result");
+      const setupEl   = document.getElementById("setup");
+      const upBtn     = document.getElementById("thumbs-up");
+      const downBtn   = document.getElementById("thumbs-down");
+      const resultEl  = document.getElementById("vote-result");
 
       let jokeLoaded = false;
       let voted = false;
@@ -53,13 +49,8 @@
       // Fetch a joke (CORS-safe)
       fetch("https://icanhazdadjoke.com/", { headers: { Accept: "application/json" } })
         .then(r => r.json())
-        .then(d => {
-          setupEl.textContent = d.joke;
-          jokeLoaded = true;
-        })
-        .catch(() => {
-          setupEl.textContent = "Oops! Could not load a joke.";
-        });
+        .then(d => { setupEl.textContent = d.joke; jokeLoaded = true; })
+        .catch(() => { setupEl.textContent = "Oops! Could not load a joke."; });
 
       function handleVote(type) {
         if (!jokeLoaded) { alert("Please wait for the joke to load."); return; }
@@ -70,8 +61,8 @@
           : "😐 Maybe the next one will be better.";
       }
 
-      upBtn.addEventListener("click", () => handleVote("up"));
-      downBtn.addEventListener("click", () => handleVote("down"));
+      upBtn.addEventListener("click",  () => handleVote("up"));
+      downBtn.addEventListener("click",() => handleVote("down"));
     });
   </script>
 </body>
