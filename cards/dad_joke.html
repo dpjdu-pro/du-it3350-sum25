@@ -1,104 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Dad Joke Card</title>
-    <style>
-        .joke-card {
-            width: 185px;
-            height: auto;
-            border-radius: 4px;
-            padding: 4px;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-            background-color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-			align-items: center;
-        }
-		.joke-title {
-			font-size: 1.1em;
-			text-align: center;
-			font-weight: bold;
-			margin-bottom: 4px;
-		}
-        .joke-setup {
-            margin-bottom: 6px;
-			text-align: center;
-        }	
-        .vote-buttons {
-			display: flex;
-			gap: 10px;
-			margin-top: 5px;
-        }
-		.vote-buttons {
-			font-size: 1.2em;
-			cursor: pointer;
-		}
-		#vote-result {
-			font-size: 0.9em;
-			margin-top: 5px;
-			text-align: center;
-		}	
-    </style>
+  <meta charset="UTF-8" />
+  <title>Dad Joke Card</title>
+  <style>
+    .joke-card {
+      width: 185px;
+      height: auto;
+      border-radius: 4px;
+      padding: 4px;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .joke-title {
+      font-size: 1.1em;
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+    .joke-setup { margin-bottom: 6px; text-align: center; }
+    .vote-buttons { display: flex; gap: 8px; justify-content: center; }
+    .vote-buttons button { font-size: 1.1em; cursor: pointer; }
+    #vote-result { font-size: 0.9em; text-align: center; }
+  </style>
 </head>
 <body>
-    <div class="joke-card" id="jokeCard">
-		<div class="joke-title">Dad Joke Generator </div>
-        <div class="joke-setup" id="setup">Loading joke...</div>
-		<div class="vote-buttons">
-      <button id="thumbs-up">👍</button>
-      <button id="thumbs-down">👎</button>
+  <div class="joke-card" id="jokeCard">
+    <div class="joke-title">Dad Joke Generator</div>
+    <div class="joke-setup" id="setup">Loading joke...</div>
+
+    <div class="vote-buttons">
+      <button id="thumbs-up" title="Thumbs up">👍</button>
+      <button id="thumbs-down" title="Thumbs down">👎</button>
     </div>
     <div id="vote-result"></div>
-    </div>
-	<script>
-    	document.addEventListener("DOMContentLoaded", function () {
-            const setupEl = document.getElementById("setup");
-      const thumbsUp = document.getElementById("thumbs-up");
-      const thumbsDown = document.getElementById("thumbs-down");
-      const voteResult = document.getElementById("vote-result");
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const setupEl = document.getElementById("setup");
+      const upBtn = document.getElementById("thumbs-up");
+      const downBtn = document.getElementById("thumbs-down");
+      const resultEl = document.getElementById("vote-result");
+
       let jokeLoaded = false;
       let voted = false;
-      // Fetch dad joke from icanhazdadjoke (CORS-safe)
-      fetch("https://icanhazdadjoke.com/", {
-        headers: {
-          Accept: "application/json"
-        }
-      })
-        .then(res => res.json())
-        .then(data => {
-          setupEl.textContent = data.joke;
+
+      // Fetch a joke (CORS-safe)
+      fetch("https://icanhazdadjoke.com/", { headers: { Accept: "application/json" } })
+        .then(r => r.json())
+        .then(d => {
+          setupEl.textContent = d.joke;
           jokeLoaded = true;
         })
-        .catch(err => {
+        .catch(() => {
           setupEl.textContent = "Oops! Could not load a joke.";
-          console.error("Fetch error:", err);
-    	});
-			
-  // Handle voting
-      function handleVote(type) {
-        if (!jokeLoaded) {
-          alert("Please wait for the joke to load before voting.");
-          return;
-        }
-        if (voted) {
-          alert("You already voted. Reload to vote on another joke.");
-          return;
-        }
+        });
 
+      function handleVote(type) {
+        if (!jokeLoaded) { alert("Please wait for the joke to load."); return; }
+        if (voted) { alert("You already voted. Reload for a new joke."); return; }
         voted = true;
-        voteResult.textContent =
-          type === "up"
-            ? "😂 Glad you liked it!"
-            : "😐 Maybe the next one will be better.";
+        resultEl.textContent = (type === "up")
+          ? "😂 Glad you liked it!"
+          : "😐 Maybe the next one will be better.";
       }
 
-      thumbsUp.addEventListener("click", () => handleVote("up"));
-      thumbsDown.addEventListener("click", () => handleVote("down"));
+      upBtn.addEventListener("click", () => handleVote("up"));
+      downBtn.addEventListener("click", () => handleVote("down"));
     });
-			
-	</script>
+  </script>
 </body>
 </html>
