@@ -1,55 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Dad Joke Card</title>
-    <style>
-        .joke-card {
-            width: 185px;
-            height: 185px;
-            border-radius: 4px;
-            padding: 4px;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-            background-color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-		.joke-title {
-			font-size: 1.1em;
-			text-align: center;
-			font-weight: bold;
-			margin-bottom: 2px;
-		}
-        .joke-setup {
-            margin-bottom: 4px;
-        }
-        .joke-punchline {
-            font-style: italic;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Dad Joke Card</title>
+  <style>
+    .joke-card {
+      width: 185px;
+      height: auto;
+      border-radius: 4px;
+      padding: 4px;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      border: 1px solid #000;
+    }
+    .joke-title { font-size: 1.1em; text-align: center; font-weight: bold; margin-bottom: 4px; }
+    .joke-setup { margin-bottom: 6px; text-align: center; }
+    .vote-buttons { display: flex; gap: 8px; justify-content: center; }
+    .vote-buttons button { font-size: 1.1em; cursor: pointer; }
+    #vote-result { font-size: 0.9em; text-align: center; }
+  </style>
 </head>
 <body>
-    <div class="joke-card" id="jokeCard">
-		<div class="joke-title">Dad Joke Generator </div>
-        <div class="joke-setup" id="setup">Loading joke...</div>
-        <div class="joke-punchline" id="punchline"></div>
+  <div class="joke-card" id="jokeCard">
+    <div class="joke-title">Dad Joke Generator</div>
+    <div class="joke-setup" id="setup">Loading joke...</div>
+
+    <div class="vote-buttons">
+      <button id="thumbs-up" title="Thumbs up">👍</button>
+      <button id="thumbs-down" title="Thumbs down">👎</button>
     </div>
-	<script>
-    	window.addEventListener("DOMContentLoaded", async () => {
-        	try {
-            	const response = await fetch("https://api.allorigins.win/get?url=" + encodeURIComponent("https://jokefather.com/api/jokes/random"));
-	            const result = await response.json();
-    	        const data = JSON.parse(result.contents); // parse inner JSON
-        	    document.getElementById("setup").textContent = data.setup;
-            	document.getElementById("punchline").textContent = data.punchline;
-	        } catch (error) {
-    	        document.getElementById("setup").textContent = "Oops! Could not load a joke.";
-        	    document.getElementById("punchline").textContent = "";
-            	console.error("Error fetching joke:", error);
-	        }
-    	});
-	</script>
+    <div id="vote-result"></div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async function () {
+      console.group("DadJokeCard");
+      console.log("[init] DOM ready");
+
+      const setupEl  = document.getElementById("setup");
+      const upBtn    = document.getElementById("thumbs-up");
+      const downBtn  = document.getElementById("thumbs-down");
+      const resultEl = document.getElementById("vote-result");
+
+      console.log("[refs]", {
+        hasSetup: !!setupEl, hasUpBtn: !!upBtn, hasDownBtn: !!downBtn, hasResult: !!resultEl
+      });
+
+      let jokeLoaded = false;
+
+      console.time("[fetch] icanhazdadjoke");
+      try {
+        const res = await fetch("https://icanhazdadjoke.com/", {
+          headers: { Accept: "application/json" }
+        });
+        console.log("[fetch] status", res.status, res.ok);
+        const data = await res.json();
+        console.log("[data]", data);
+        setupEl.textContent = data.joke;
+        jokeLoaded = true;
+      } catch (e) {
+        console.error("[error] fetch failed", e);
+        setupEl.textContent = "Oops! Could not load a joke.";
+      } finally {
+        console.timeEnd("[fetch] icanhazdadjoke");
+        console.groupEnd();
+      }
+
+      // debugger for Lab 2 (reload to pause here and step through)
+      debugger;
+
+      function handleVote(type) {
+        console.group("vote");
+        console.log("[click]", type, "jokeLoaded?", jokeLoaded);
+        if (!jokeLoaded) {
+          console.warn("[guard] blocked: joke not loaded");
+          alert("Please wait for the joke to load.");
+          console.groupEnd();
+          return;
+        }
+        resultEl.textContent = (type === "up")
+          ? "😂 Glad you liked it!"
+          : "😐 Maybe the next one will be better.";
+        console.log("[resultText]", resultEl.textContent);
+        console.groupEnd();
+      }
+
+      upBtn.addEventListener("click",  () => handleVote("up"));
+      downBtn.addEventListener("click",() => handleVote("down"));
+    });
+  </script>
 </body>
 </html>
