@@ -5,26 +5,25 @@
   <link rel="stylesheet" href="css/main.css">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/utils.js"></script>
 
-		<script src="js/utils.js"></script>
-		<!-- New Google tag (gtag.js) -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=G-HTSE6BH6RY"></script>
-		<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
-		gtag('js', new Date());
+  <!-- Google Analytics (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-71RHKKC4X8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-71RHKKC4X8');
+  </script>
 
-		gtag('config', 'G-HTSE6BH6RY');
-		</script>
-
-		<!-- Old Google tag (gtag.js) -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=G-10MPPHLD10"></script>
-		<script>
-  			window.dataLayer = window.dataLayer || [];
-  			function gtag(){dataLayer.push(arguments);}
-  			gtag('js', new Date());
-  			gtag('config', 'G-10MPPHLD10');
-		</script>
+  <!-- Google Analytics (old) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-10MPPHLD10"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-10MPPHLD10');
+  </script>
 
   <title>IT-3350 Dashboard</title>
 
@@ -49,7 +48,9 @@
 
 <body>
   <center><h3>Web Widget Dashboard</h3></center>
+
   <div class="cardContainer">
+    <!-- Working cards kept -->
     <iframe class="card" scrolling="no" style="width:450px; height:650px;" src="cards/catsapi.html"></iframe>
     <iframe class="card" scrolling="no" src="cards/clock.html"></iframe>
     <iframe class="card" scrolling="no" src="cards/random_dog.html"></iframe>
@@ -58,17 +59,13 @@
     <iframe class="card" scrolling="no" style="width:400px;" src="cards/temperature.html"></iframe>
     <iframe class="card" scrolling="no" src="cards/randomrecipe.html"></iframe>
     <iframe class="card" scrolling="no" src="cards/nutritionix-api.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/quote.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/Date$Time.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/newcard_arg-template1.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/newcard_zaid.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/newcard_derrick.html"></iframe>
-    <iframe class="card" scrolling="yes" style='width:400px;' src="cards/NIST-NVD.html"></iframe>
+    <iframe class="card" scrolling="no" src="cards/DateTime.html"></iframe>
+    <iframe class="card" scrolling="yes" style="width:400px;" src="cards/NIST-NVD.html"></iframe>
     <iframe class="card" scrolling="no" src="cards/rt-apod.html"></iframe>
     <iframe class="card" scrolling="no" src="cards/dad_joke.html"></iframe>
     <iframe class="card" scrolling="no" src="cards/zaid_pokemon.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/newcard_derrick.html"></iframe>
-</div>
-	</BODY>
-<FOOTER>Powered By Google Analytics</FOOTER>
-</HTML>
+  </div>
+
+  <footer>Powered By Google Analytics</footer>
+</body>
+</html>
