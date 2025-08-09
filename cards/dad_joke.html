@@ -15,6 +15,7 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
+      border: 1px solid #000;
       border: 1px solid #000; /* optional: to match the look in your screenshot */
     }
     .joke-title { font-size: 1.1em; text-align: center; font-weight: bold; margin-bottom: 4px; }
@@ -36,6 +37,64 @@
     <div id="vote-result"></div>
   </div>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", async function () {
+      console.group("DadJokeCard");
+      console.log("[init] DOM ready");
+
+      const setupEl  = document.getElementById("setup");
+      const upBtn    = document.getElementById("thumbs-up");
+      const downBtn  = document.getElementById("thumbs-down");
+      const resultEl = document.getElementById("vote-result");
+
+      console.log("[refs]", {
+        hasSetup: !!setupEl, hasUpBtn: !!upBtn, hasDownBtn: !!downBtn, hasResult: !!resultEl
+      });
+
+      let jokeLoaded = false;
+
+      console.time("[fetch] icanhazdadjoke");
+      try {
+        const res = await fetch("https://icanhazdadjoke.com/", {
+          headers: { Accept: "application/json" }
+        });
+        console.log("[fetch] status", res.status, res.ok);
+        const data = await res.json();
+        console.log("[data]", data);
+        setupEl.textContent = data.joke;
+        jokeLoaded = true;
+      } catch (e) {
+        console.error("[error] fetch failed", e);
+        setupEl.textContent = "Oops! Could not load a joke.";
+      } finally {
+        console.timeEnd("[fetch] icanhazdadjoke");
+        console.groupEnd();
+      }
+
+      // debugger for Lab 2 (reload to pause here and step through)
+      debugger;
+
+      function handleVote(type) {
+        console.group("vote");
+        console.log("[click]", type, "jokeLoaded?", jokeLoaded);
+        if (!jokeLoaded) {
+          console.warn("[guard] blocked: joke not loaded");
+          alert("Please wait for the joke to load.");
+          console.groupEnd();
+          return;
+        }
+        resultEl.textContent = (type === "up")
+          ? "😂 Glad you liked it!"
+          : "😐 Maybe the next one will be better.";
+        console.log("[resultText]", resultEl.textContent);
+        console.groupEnd();
+      }
+
+      upBtn.addEventListener("click",  () => handleVote("up"));
+      downBtn.addEventListener("click",() => handleVote("down"));
+    });
+  </script>
+=======
  <script>
   document.addEventListener("DOMContentLoaded", async function () {
     console.group("DadJokeCard");
@@ -115,6 +174,5 @@
   });
 </script>
 
-  
 </body>
 </html>
