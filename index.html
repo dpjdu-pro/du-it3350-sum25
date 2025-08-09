@@ -28,43 +28,67 @@
   <title>IT-3350 Dashboard</title>
 
   <script>
-    // Resize iframes dynamically based on their content
-    function resizeIframes() {
-      const iframes = document.querySelectorAll('iframe.card');
-      iframes.forEach(iframe => {
-        iframe.addEventListener('load', () => {
-          try {
-            const doc = iframe.contentWindow.document;
-            iframe.style.height = doc.body.scrollHeight + 'px';
-          } catch (e) {
-            console.warn('Could not access iframe content for resizing (CORS restriction).');
-          }
-        });
-      });
-    }
-    window.onload = resizeIframes;
+    // Build only the cards that actually exist
+    document.addEventListener('DOMContentLoaded', async () => {
+      const container = document.getElementById('cards');
+
+      const cards = [
+        { src: 'cards/catsapi.html', width: 450, height: 650, scrolling: 'no' },
+        { src: 'cards/clock.html' },
+        { src: 'cards/random_dog.html' },
+        { src: 'cards/tron.html' },
+        { src: 'cards/currency.html' },
+        { src: 'cards/temperature.html', width: 400 },
+        { src: 'cards/randomrecipe.html' },
+        { src: 'cards/nutritionix-api.html' },
+        { src: 'cards/DateTime.html' },
+        { src: 'cards/NIST-NVD.html', width: 400, scrolling: 'yes' },
+        { src: 'cards/rt-apod.html' },
+        { src: 'cards/dad_joke.html' },
+        { src: 'cards/zaid_pokemon.html' }
+      ];
+
+      async function exists(path) {
+        try {
+          const res = await fetch(path, { method: 'HEAD' });
+          return res.ok;
+        } catch {
+          return false;
+        }
+      }
+
+      // Create iframes only for files that are present
+      for (const c of cards) {
+        if (await exists(c.src)) {
+          const iframe = document.createElement('iframe');
+          iframe.className = 'card';
+          iframe.src = c.src;
+          iframe.scrolling = c.scrolling || 'no';
+          if (c.width)  iframe.style.width  = c.width + 'px';
+          if (c.height) iframe.style.height = c.height + 'px';
+          container.appendChild(iframe);
+
+          // Auto-resize after load (same-origin only)
+          iframe.addEventListener('load', () => {
+            try {
+              const doc = iframe.contentWindow.document;
+              if (!c.height) iframe.style.height = doc.body.scrollHeight + 'px';
+            } catch {
+              // CORS: ignore
+            }
+          });
+        } else {
+          console.warn('Skipping missing card:', c.src);
+        }
+      }
+    });
   </script>
 </head>
 
 <body>
   <center><h3>Web Widget Dashboard</h3></center>
 
-  <div class="cardContainer">
-    <!-- Working cards kept -->
-    <iframe class="card" scrolling="no" style="width:450px; height:650px;" src="cards/catsapi.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/clock.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/random_dog.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/tron.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/currency.html"></iframe>
-    <iframe class="card" scrolling="no" style="width:400px;" src="cards/temperature.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/randomrecipe.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/nutritionix-api.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/DateTime.html"></iframe>
-    <iframe class="card" scrolling="yes" style="width:400px;" src="cards/NIST-NVD.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/rt-apod.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/dad_joke.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/zaid_pokemon.html"></iframe>
-  </div>
+  <div class="cardContainer" id="cards"></div>
 
   <footer>Powered By Google Analytics</footer>
 </body>
