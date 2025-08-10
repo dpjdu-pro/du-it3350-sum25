@@ -49,12 +49,18 @@
 
     <script>
         async function loadDateTime() {
+			 console.log("loadDateTime() called");
             try {
+				 console.log("Fetching from API...");
                 const res = await fetch('https://worldtimeapi.org/api/ip');
+				  console.log("Response status:", res.status); 
                 const data = await res.json();
+				  console.log("API Data received:", data);
                 const dateTime = new Date(data.datetime);
+				 console.log("Parsed Date:", dateTime); 
                 document.getElementById('date').textContent = dateTime.toLocaleDateString();
                 document.getElementById('time').textContent = dateTime.toLocaleTimeString();
+				  console.log("DOM updated successfully");
             } catch (err) {
                 console.error('Error fetching time:', err);
                 document.getElementById('date').textContent = 'Error';
