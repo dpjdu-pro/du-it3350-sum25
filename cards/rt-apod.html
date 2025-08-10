@@ -60,13 +60,15 @@
 		<script>
 			const apodApi = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY';
 				fetch(apodApi)
+					debugger;
+					console.log('Grabbing NASA APOD from API')
 					.then(response => response.json())
 					.then(json=>{
 						console.log(json);
 						const nasaPic = document.getElementById('apodImg');
 						nasaPic.src = json.url;
 					})
-					.catch(error => console.error('Could not fetch APOD. Error:', error));	
+					.catch(error => console.error('Could not fetch APOD. Error:', error));
 		</script>
 
     </body>
