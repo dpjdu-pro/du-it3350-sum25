@@ -16,40 +16,82 @@
             flex-direction: column;
             justify-content: space-between;
         }
-		.joke-title {
-			font-size: 1.1em;
-			text-align: center;
-			font-weight: bold;
-			margin-bottom: 2px;
-		}
+        .joke-title {
+            font-size: 1.1em;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
         .joke-setup {
             margin-bottom: 4px;
         }
         .joke-punchline {
             font-style: italic;
         }
+        .controls {
+            margin-top: 8px;
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
     <div class="joke-card" id="jokeCard">
-		<div class="joke-title">Dad Joke Generator </div>
+        <div class="joke-title">Dad Joke Generator</div>
         <div class="joke-setup" id="setup">Loading joke...</div>
         <div class="joke-punchline" id="punchline"></div>
     </div>
-	<script>
-    	window.addEventListener("DOMContentLoaded", async () => {
-        	try {
-            	const response = await fetch("https://api.allorigins.win/get?url=" + encodeURIComponent("https://jokefather.com/api/jokes/random"));
-	            const result = await response.json();
-    	        const data = JSON.parse(result.contents); // parse inner JSON
-        	    document.getElementById("setup").textContent = data.setup;
-            	document.getElementById("punchline").textContent = data.punchline;
-	        } catch (error) {
-    	        document.getElementById("setup").textContent = "Oops! Could not load a joke.";
-        	    document.getElementById("punchline").textContent = "";
-            	console.error("Error fetching joke:", error);
-	        }
-    	});
-	</script>
+
+    <div class="controls">
+        <input type="text" id="jokeCategory" placeholder="Enter category (optional)" />
+        <button id="getJoke">Get Joke</button>
+    </div>
+
+    <script>
+        async function fetchJoke(category) {
+            try {
+                // API endpoint (category parameter is optional here)
+                const url = "https://api.allorigins.win/get?url=" + encodeURIComponent("https://jokefather.com/api/jokes/random");
+                const response = await fetch(url);
+                const result = await response.json();
+                const data = JSON.parse(result.contents); // parse inner JSON
+
+                document.getElementById("setup").textContent = data.setup;
+                document.getElementById("punchline").textContent = data.punchline;
+            } catch (error) {
+                document.getElementById("setup").textContent = "Oops! Could not load a joke.";
+                document.getElementById("punchline").textContent = "";
+                console.error("Error fetching joke:", error);
+            }
+        }
+
+        function validateInput(input) {
+            if (!input) return true; // Empty is fine (no category filter)
+
+            // Edge case checks
+            if (input.length < 3) {
+                alert("Category must be at least 3 characters long.");
+                return false;
+            }
+            if (/[^a-zA-Z ]/.test(input)) {
+                alert("Category must only contain letters and spaces.");
+                return false;
+            }
+            return true;
+        }
+
+        document.getElementById("getJoke").addEventListener("click", () => {
+            const category = document.getElementById("jokeCategory").value.trim();
+            if (validateInput(category)) {
+                fetchJoke(category);
+            }
+        });
+
+        // Load a joke on page load
+        window.addEventListener("DOMContentLoaded", () => {
+            fetchJoke();
+        });
+    </script>
 </body>
 </html>
