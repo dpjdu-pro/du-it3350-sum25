@@ -1,0 +1,297 @@
+ <!-- Auth: David P. Johnson 7/20/25 ICT 3350 -->
+ <!-- Displays a small card for getting a stock's current price.-->>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Quote</title>
+    <style>
+        /* Basic styling for the body */
+        body {
+            font-family: "Inter", sans-serif; /* Simple font */
+            background-color: #ffffff; /* Changed background color to white */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full viewport height */
+            margin: 0;
+            padding: 0.10rem; /* Further reduced padding for overall top margin compression */
+            box-sizing: border-box;
+            overflow: hidden; /* Prevent scrollbars if content slightly overflows */
+        }
+        /* Card container styling to fit 200px by 200px */
+        .card-container {
+            max-width: 190px; /* Adjusted to fit within 200px with padding */
+            max-height: 190px; /* Adjusted to fit within 200px with padding */
+            width: 100%;
+            height: 100%; /* Allow it to shrink */
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* Slightly smaller border-radius */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Even simpler shadow */
+            padding: 0.5rem; /* Reduced padding for more compression */
+            text-align: center;
+            display: flex; /* Use flexbox for internal layout */
+            flex-direction: column;
+            /* Changed to flex-start to allow tighter packing from the top */
+            justify-content: flex-start;
+            overflow: hidden; /* Hide overflowing content */
+        }
+        .card-title {
+            font-size: 1rem; /* Significantly smaller font size */
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.3rem; /* Further reduced margin to compress space */
+        }
+        .input-button-section {
+            display: flex;
+            align-items: center;
+            gap: 0.2rem; /* Reduced gap to accommodate shorter input field */
+            margin-bottom: 0.3rem; /* Further reduced margin to compress space */
+        }
+        .input-field {
+            /* flex-grow: 1; */ /* Removed flex-grow to control width directly */
+            width: 40%; /* Adjusted width to be roughly 50% shorter while fitting */
+            border: 1px solid #d1d5db;
+            padding: 0.3rem 0.5rem; /* Significantly smaller padding */
+            border-radius: 0.3rem; /* Smaller border-radius */
+            font-size: 0.7rem; /* Significantly smaller font size */
+            outline: none;
+        }
+        .input-field:focus {
+            border-color: #6366f1;
+        }
+        .get-quote-button {
+            background-color: #6366f1;
+            color: #ffffff;
+            padding: 0.3rem 0.6rem; /* Significantly smaller padding */
+            border-radius: 0.3rem; /* Smaller border-radius */
+            font-weight: 600;
+            font-size: 0.7rem; /* Significantly smaller font size */
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Even simpler shadow */
+        }
+        .get-quote-button:hover {
+            background-color: #4f46e5;
+        }
+        .stock-details-section {
+            text-align: left;
+            flex-grow: 1; /* Allow details section to take available space */
+            display: flex;
+            flex-direction: column;
+            /* Adjusted margin-top to pull it up, compressing space */
+            margin-top: -0.5rem; /* Negative margin to move it up */
+            justify-content: space-around; /* Distribute detail rows */
+        }
+        .stock-details-title {
+            font-size: 0.9rem; /* Significantly smaller font size */
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.2rem; /* Reduced margin */
+        }
+        .display-ticker {
+            font-weight: bold;
+            color: #111827;
+        }
+        .details-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem; /* Reduced gap between rows */
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.15rem 0; /* Significantly smaller padding */
+            border-bottom: 1px dashed #e5e7eb;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            font-weight: 500;
+            color: #4b5563;
+            font-size: 0.7rem; /* Significantly smaller font size */
+        }
+        .detail-value {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 0.7rem; /* Significantly smaller font size */
+        }
+    </style>
+</head>
+<body>
+    <!-- Main container for the stock quote card -->
+    <div class="card-container">
+        <!-- Card Title -->
+        <h1 class="card-title">Stock Quote</h1>
+
+        <!-- Input and Button Section -->
+        <div class="input-button-section">
+            <!-- Stock Ticker Input Field -->
+            <input
+                type="text"
+                id="stockTicker"
+                placeholder="GOOG"
+                class="input-field"
+                value="GOOG"
+            />
+            <!-- Get Quote Button -->
+            <button id="getQuoteButton" class="get-quote-button">
+                Get Quote
+            </button>
+        </div>
+
+        <!-- Stock Details Section -->
+        <div class="stock-details-section">
+            <h2 class="stock-details-title">Stock Details: <span id="displayTicker" class="display-ticker">GOOG</span></h2>
+            <div class="details-list">
+                <!-- Current Price Row -->
+                <div class="detail-row">
+                    <span class="detail-label">Current:</span>
+                    <span id="currentPrice" class="detail-value">...</span>
+                </div>
+                <!-- Open Price Row -->
+                <div class="detail-row">
+                    <span class="detail-label">Open:</span>
+                    <span id="openPrice" class="detail-value">...</span>
+                </div>
+                <!-- High Price Row -->
+                <div class="detail-row">
+                    <span class="detail-label">High:</span>
+                    <span id="highPrice" class="detail-value">...</span>
+                </div>
+                <!-- Low Price Row -->
+                <div class="detail-row">
+                    <span class="detail-label">Low:</span>
+                    <span id="lowPrice" class="detail-value">...</span>
+                </div>
+                <!-- Change Row -->
+                <div class="detail-row">
+                    <span class="detail-label">Change:</span>
+                    <span id="change" class="detail-value">...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get references to all the necessary DOM elements
+        const getQuoteButton = document.getElementById('getQuoteButton');
+        const stockTickerInput = document.getElementById('stockTicker');
+        const displayTicker = document.getElementById('displayTicker');
+        const currentPriceSpan = document.getElementById('currentPrice');
+        const openPriceSpan = document.getElementById('openPrice');
+        const highPriceSpan = document.getElementById('highPrice');
+        const lowPriceSpan = document.getElementById('lowPrice');
+        const changeSpan = document.getElementById('change');
+
+        // Your API Key for Alpha Vantage.
+        // Note: It's better to keep API keys on a server, but for this client-side example, it's placed here.
+        const apiKey = 'B7DJ10XDVVWVWXHN';
+
+        /**
+         * Fetches stock data from the Alpha Vantage API and updates the UI.
+         */
+        async function fetchStockData() {
+            const stockSymbol = stockTickerInput.value.trim().toUpperCase();
+            if (!stockSymbol) {
+                alert('Please enter a stock symbol.');
+                return;
+            }
+
+            // Update UI to show a loading state
+            //debugger;
+            currentPriceSpan.textContent = '...';
+            openPriceSpan.textContent = '...';
+            highPriceSpan.textContent = '...';
+            lowPriceSpan.textContent = '...';
+            changeSpan.textContent = '...';
+            displayTicker.textContent = stockSymbol;
+
+            console.log(`Fetching data for stock symbol: ${stockSymbol}`);
+            console.log(`Using API Key: ${apiKey}`);
+
+
+            const apiUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${stockSymbol}&interval=5min&apikey=${apiKey}`;
+            
+            console.log(`Fetching data from: ${apiUrl}`);
+            
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+
+                // Check for API-specific errors (e.g., invalid symbol or API key limit)
+                if (data['Error Message']) {
+                    throw new Error(data['Error Message']);
+                }
+                // The 'Note' field often indicates hitting the API call frequency limit.
+                if (data['Note']) {
+                    throw new Error('API call frequency limit reached. Please wait a minute and try again.');
+                }
+
+                const timeSeries = data['Time Series (5min)'];
+                if (!timeSeries) {
+                    throw new Error(`Could not retrieve time series data for '${stockSymbol}'. Check the symbol.`);
+                }
+
+                // Get the two most recent timestamps to calculate the change
+                const allTimestamps = Object.keys(timeSeries);
+                const latestTimestamp = allTimestamps[0];
+                const previousTimestamp = allTimestamps[1];
+
+                if (!latestTimestamp || !previousTimestamp) {
+                    throw new Error('Not enough data to display.');
+                }
+
+                const latestData = timeSeries[latestTimestamp];
+                const previousData = timeSeries[previousTimestamp];
+
+                // Extract price points and calculate the change from the previous interval's close
+                const currentPrice = parseFloat(latestData['4. close']);
+                const openPrice = parseFloat(latestData['1. open']);
+                const highPrice = parseFloat(latestData['2. high']);
+                const lowPrice = parseFloat(latestData['3. low']);
+                const previousClose = parseFloat(previousData['4. close']);
+                const change = currentPrice - previousClose;
+
+                // Update the UI with the fetched data, formatted to 2 decimal places
+                currentPriceSpan.textContent = currentPrice.toFixed(2);
+                openPriceSpan.textContent = openPrice.toFixed(2);
+                highPriceSpan.textContent = highPrice.toFixed(2);
+                lowPriceSpan.textContent = lowPrice.toFixed(2);
+                changeSpan.textContent = change.toFixed(2);
+
+                // Change the color of the 'change' value to green for positive and red for negative
+                changeSpan.style.color = change >= 0 ? '#16a34a' : '#dc2626'; // Green / Red
+
+            } catch (error) {
+                console.error('Failed to fetch stock data:', error);
+                alert(`Could not fetch data: ${error.message}`);
+                // Reset the fields to indicate an error
+                currentPriceSpan.textContent = 'N/A';
+                openPriceSpan.textContent = 'N/A';
+                highPriceSpan.textContent = 'N/A';
+                lowPriceSpan.textContent = 'N/A';
+                changeSpan.textContent = 'N/A';
+                changeSpan.style.color = 'inherit'; // Reset color
+            }
+        }
+
+        // Add event listener to the button to fetch data on click
+        getQuoteButton.addEventListener('click', fetchStockData);
+
+        // Also fetch data when the user presses 'Enter' in the input field
+        stockTickerInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent form submission if it's inside one
+                fetchStockData();
+            }
+        });
+
+        // Perform an initial fetch on page load with the default stock symbol
+        window.addEventListener('load', fetchStockData);
