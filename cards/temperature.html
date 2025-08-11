@@ -1,35 +1,86 @@
-<HTML>
-	<HEAD>
-		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-		<script src="../js/utils.js"></script>
-  		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-	</HEAD>
-	<BODY>	
-		<div>
-  			<canvas id="tempChart"></canvas>
-		</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hourly Temperature Chart</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        canvas {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h2>Hourly Temperature Forecast</h2>
+    <div>
+        <canvas id="tempChart"></canvas>
+    </div>
 
-		<script>
-			const ctx = $('#tempChart');
+    <script>
+        // Define getResponse helper function (used instead of loading utils.js)
+        function getResponse(url, callback) {
+            $.getJSON(url)
+                .done(callback)
+                .fail((jqXHR, textStatus, errorThrown) => {
+                    console.error("API request failed:", textStatus, errorThrown);
+                });
+        }
 
-			// Web resources may change/disappear. Substitute as needed.
-			// Hourly Temperature Forecast from OpenMeteo: https://open-meteo.com/
-			// discovered via https://publicapis.dev/category/weather
-			getResponse('https://api.open-meteo.com/v1/forecast?latitude=39.6766174&longitude=-104.9618965&hourly=temperature_2m', (response) => {
-				var hourlyForecast = response.hourly;
-				var times = hourlyForecast.time;
-				var temps = hourlyForecast.temperature_2m;
-				new Chart(ctx, {
-					type: 'bar',
-					data: {
-						labels: times,
-						datasets: [{
-							label: 'Hourly Temperatures (in Celsius)',
-							data: temps,
-						}]		  
-					}
-				});
-			});
-		</script>
-	</BODY>
-</HTML>		
+        const ctx = $('#tempChart')[0].getContext('2d');
+
+        getResponse('https://api.open-meteo.com/v1/forecast?latitude=39.6766174&longitude=-104.9618965&hourly=temperature_2m', (response) => {
+            console.log("API response received:", response);
+
+            var hourlyForecast = response.hourly;
+            var times = hourlyForecast.time;
+            var temps = hourlyForecast.temperature_2m;
+
+            console.log("Time labels length:", times.length);
+            console.log("Temperature data length:", temps.length);
+            console.log("Sample time data:", times.slice(0, 5));
+            console.log("Sample temp data:", temps.slice(0, 5));
+
+            debugger; // Use browser dev tools to step through rendering
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: times.map((t, i) => i % 3 === 0 ? t : ''), // Show every 3rd label
+                    datasets: [{
+                        label: 'Hourly Temperatures (°C)',
+                        data: temps,
+                        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            ticks: {
+                                maxRotation: 90,
+                                minRotation: 45,
+                                autoSkip: true,
+                                maxTicksLimit: 12
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Temperature (°C)'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
