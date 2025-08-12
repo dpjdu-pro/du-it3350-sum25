@@ -1,7 +1,28 @@
+
+html, body {
+	margin: 0;
+	padding: 0;
+	height: 100vh;
+	overflow: auto;
+	flex-direction: column;
+}
+
+.header {
+	height: 40px;
+	flex-shrink: 0;
+}
+
+.footer {
+	height: 40px;
+	flex-shrink: 0;
+}
+
 .cardContainer {
 	display: flex;
 	flex: 1;
 	flex-wrap: wrap;
+	justify-content: center;
+	flex-grow: 1;
 }
 
 iframe.card {
@@ -9,10 +30,12 @@ iframe.card {
 	border-width: 2;
 	border-color: black;
 	border-style: solid;
-	width: 200px;
-	height: 200px;
   	display: flex;
   	justify-content: center;
   	align-items: center;
   	margin: 20px;
+	height: 80vh;
+	width: fit-content;
+	flex: 1;
+	flex-shrink: 1;
 }

@@ -1,63 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-		<style>
-			.header {
-				color: rgb(255, 255, 255);
-				font-size:medium;
-				background-color: rgba(0, 0, 170, 0.5);
-				border-radius: 10px;
-				display: flex;
-				font-weight: bold;
-				text-align: center;
-				position: relative;
-			}
-			.buttontable {
-				display: flex;
-				justify-content: center;
-				align-items: bottom;
-				padding: 33%;
-			}
-			.button {
-				font-size: 16px;
-				color: white;
- 				background-color: rgb(0, 0, 170);
-				border: 2px solid rgb(164, 164, 164);
-				border-radius: 20%;
-				border-width: 2px;
-				text-align: center;
-				padding: 8px;
-				transition-duration: 0.3s;
-			}
-			.button:hover {
-				background-color: rgb(100, 100, 228)
-			}
-			.button:active {
-				background-color: rgb(0, 0, 120);
-				border-color: rgb(198, 198, 198);
-			}
-			.img {
-				max-width: 200px;
-				height: auto;
-				object-fit: contain;
-				position:absolute;
-				z-index: -1;
-				left: 0;
-				top: 0;
-			}
-		</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
 
-	</head>
-    <body>
-		<div class="img">
-			<img id="apodImg" style = 'max-width:200px'>
-		</div>
-        <h1 class="header">
-			NASA </br>
-			Astronomy Picture of the Day
-		</h1>
+        .imgwrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+			width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
 
-		<script>
+        .imgwrapper img {
+            height: 100%;
+			width: 100%;
+            object-fit: cover;
+        }
+
+        .header {
+            color: white;
+            font-size: medium;
+            background-color: rgba(0, 0, 170, 0.5);
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-around;
+            font-weight: bold;
+            text-align: center;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 5px;
+        }
+
+        .buttontable {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 33%;
+        }
+
+        .button {
+            font-size: 16px;
+            color: white;
+            background-color: rgb(0, 0, 170);
+            border: 2px solid rgb(164, 164, 164);
+            border-radius: 20%;
+            text-align: center;
+            padding: 8px;
+            transition-duration: 0.3s;
+        }
+
+        .button:hover {
+            background-color: rgb(100, 100, 228);
+        }
+
+        .button:active {
+            background-color: rgb(0, 0, 120);
+            border-color: rgb(198, 198, 198);
+        }
+    </style>
+</head>
+<body>
+    <div class="imgwrapper">
+        <img src="test.jpg" alt="Background Image">
+    </div>
+
+    <h1 class="header">
+        NASA <br>
+        Astronomy Picture of the Day
+    </h1>
+
+		<!-- <script>
 			const apodApi = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY';
 				fetch(apodApi)
 					.then(response => response.json())
@@ -68,7 +89,7 @@
 						nasaPic.src = json.url;
 					})
 					.catch(error => console.error('Could not fetch APOD. Error:', error));
-		</script>
+		</script> -->
 
     </body>
 </html>
