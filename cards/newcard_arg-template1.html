@@ -28,7 +28,7 @@
     }
 
     .cat-fact {
-        font-size: 0.5rem;
+        font-size: 1.2rem;
         margin-bottom: 20px;
     }
 
@@ -45,6 +45,7 @@
     .button:hover {
         background-color: #ff1493;
     }
+    
 
     </style>
 </head>
@@ -54,9 +55,27 @@
         <h2>
             <p class="cat-fact">Loading...</p>
             <button class="button" onclick="getCatFact()">New Fact</button>
+            <br>
+            <br>
+            <button class="button" onclick="increaseFontSize()">Font Bigger</button>
+<button class="button" onclick="decreaseFontSize()">Font Smaller</button>
+
     </div>
 
     <script>
+        function increaseFontSize() {
+    const fact = document.querySelector('.cat-fact');
+    let currentSize = parseFloat(window.getComputedStyle(fact).fontSize);
+    fact.style.fontSize = (currentSize + 2) + "px";
+}
+
+function decreaseFontSize() {
+    const fact = document.querySelector('.cat-fact');
+    let currentSize = parseFloat(window.getComputedStyle(fact).fontSize);
+    if (currentSize > 8) { // Prevent font from getting too small
+        fact.style.fontSize = (currentSize - 2) + "px";
+    }
+}
         let lastFiveFacts = [];
 
         async function getCatFact() {
