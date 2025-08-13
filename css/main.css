@@ -1,18 +1,19 @@
 .cardContainer {
-	display: flex;
-	flex: 1;
-	flex-wrap: wrap;
+    display: flex;
+    flex-wrap: wrap;
+    align-items; flex-start;
+	justify-content: center;
+	width: 100vw;
+    height: 100vh;
 }
 
 iframe.card {
-	border-radius: 15px;
-	border-width: 2;
-	border-color: black;
-	border-style: solid;
-	width: 200px;
-	height: 200px;
-  	display: flex;
-  	justify-content: center;
-  	align-items: center;
-  	margin: 20px;
+  width: 100vw;
+  height: 100vh;
+  border-radius: 15px;
+  border-width: 2px;
+  border-color: black;
+  border-style: solid;
+  margin: 0px;
+  box-sizing: border-box;
 }
