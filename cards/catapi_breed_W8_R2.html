@@ -70,24 +70,33 @@
     }
 
     // Get cat image by breed or random if no breed selected
-    async function getCatByBreed() {
-      const breedId = breedSelect.value;
-      const url = breedId
-        ? `${BASE_URL}/images/search?breed_ids=${breedId}`
-        : `${BASE_URL}/images/search`;
+   async function getCatByBreed() {
+    const breedId = breedSelect.value;
+    const url = breedId
+      ? `${BASE_URL}/images/search?breed_ids=${breedId}`
+      : `${BASE_URL}/images/search`;
 
-        console.log("Fetching cat image with breedId:", breedId, "URL:", url);
+    console.log("Fetching cat image with breedId:", breedId, "URL:", url);
 
-      try {
-        const res = await fetch(url, {
-          headers: { "x-api-key": API_KEY }
-        });
-        const data = await res.json();
+    try {
+      const res = await fetch(url, {
+        headers: { "x-api-key": API_KEY }
+      });
+      console.log("Cat Image API Response status:", res.status);
+
+      const data = await res.json();
+      console.log("Cat image data received:", data);
+
+      if (data.length > 0 && data[0].url) {
         document.getElementById("cat-image").src = data[0].url;
-      } catch (err) {
-        console.error("Error fetching cat:", err);
+        console.log("Cat image successfully set to:", data[0].url);
+      } else {
+        console.warn("No cat image returned from API.");
       }
+    } catch (err) {
+      console.error("Error fetching cat:", err);
     }
+  }
 
     // Initialize
     window.onload = async () => {
