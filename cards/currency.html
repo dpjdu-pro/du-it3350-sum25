@@ -1,42 +1,103 @@
-<HTML>
-	<HEAD>
-		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-		<script src="../js/utils.js"></script>
-		
-		<script>
-			var conversionMap = new Array();
-			// Web resources may change/disappear. Substitute as needed.
-			// https://github.com/fawazahmed0/exchange-api?tab=readme-ov-file
-			// discovered via https://publicapis.dev/category/currency-exchange
-			getResponse('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json', (response) => {
-				for (const [key, value] of Object.entries(response.usd)) {
-					conversionMap[key] = value;
-				}
-			});
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Currency Converter</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="../js/utils.js"></script>
+    <style>
+        /* Make the card fill the whole screen */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
 
-			function doComputation() {
-				var result = $('#cadValue').val() * conversionMap[$('#currency').val()];
-				$('#endValue').val(result.toFixed(2));
-			}
-		</script>
-	</HEAD>
-	<BODY>
-		<form style='text-align:center;'>
-			<p><B>Currency Converter</B></p>
-			<input type='text' id='usdValue' style='width:60px;'
-				onkeyup="doComputation();" />
-				<span style='font-size:22px;'> USD</span>
-			<br/><span style='font-size:48px;'>=</span>
-			<br/>
-			<input type='text' id='endValue' style='width:60px;'> 
-			<SELECT id='currency' onchange="doComputation();">
-				<OPTION value='eur'>EUR</OPTION>
-				<OPTION value='gbp'>GBP</OPTION>
-				<OPTION value='chf'>CHF</OPTION>
-				<OPTION value='jpy'>JPY</OPTION>
-				<OPTION value='cny'>CNY</OPTION>
-				<OPTION value='aud'>AUD</OPTION>
-			</SELECT>
-		</form>
-	</BODY>
-</HTML>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card p {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .card input, .card select {
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            text-align: center;
+            width: 100%;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+        }
+
+        .equals {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin: 1rem 0;
+        }
+    </style>
+
+    <script>
+        var conversionMap = new Array();
+        console.log("Fetching currency conversion rates...");
+
+        getResponse('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json', (response) => {
+            console.log("API response received:", response);
+            for (const [key, value] of Object.entries(response.usd)) {
+                conversionMap[key] = value;
+            }
+            console.log("conversionMap populated:", conversionMap);
+        });
+
+        function doComputation() {
+            debugger;
+
+            var usdValue = $('#usdValue').val();
+            var selectedCurrency = $('#currency').val();
+            var conversionRate = conversionMap[selectedCurrency];
+            var result = usdValue * conversionRate;
+
+            console.log("User input (USD):", usdValue);
+            console.log("Selected currency:", selectedCurrency);
+            console.log("Conversion rate:", conversionRate);
+            console.log("Converted result:", result);
+
+            $('#endValue').val(result.toFixed(2));
+        }
+    </script>
+</head>
+<body>
+    <div class="card">
+        <p>Currency Converter</p>
+        <input type="number" id="usdValue" placeholder="Enter USD" onkeyup="doComputation();" />
+        <span class="equals">=</span>
+        <input type="text" id="endValue" readonly>
+        <select id="currency" onchange="doComputation();">
+            <option value="eur">EUR</option>
+            <option value="gbp">GBP</option>
+            <option value="chf">CHF</option>
+            <option value="jpy">JPY</option>
+            <option value="cny">CNY</option>
+            <option value="aud">AUD</option>
+        </select>
+    </div>
+</body>
+</html>
