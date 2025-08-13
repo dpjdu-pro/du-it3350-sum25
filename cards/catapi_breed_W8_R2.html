@@ -76,6 +76,8 @@
         ? `${BASE_URL}/images/search?breed_ids=${breedId}`
         : `${BASE_URL}/images/search`;
 
+        console.log("Fetching cat image with breedId:", breedId, "URL:", url);
+
       try {
         const res = await fetch(url, {
           headers: { "x-api-key": API_KEY }
