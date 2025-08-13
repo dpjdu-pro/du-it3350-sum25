@@ -17,16 +17,27 @@
         margin: 0px;
     }
 
-    .card {
-        background-color: #bbddfb;
-        border: 2px solid #2379cf;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        padding: 20px;
-        max-width: 200px;
-        text-align: top;
-    }
-
+.card {
+  background-color: #bbddfb;
+  border: 2px solid #2379cf;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  max-width: 95vw;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: top;
+}
+@media (max-width: 600px) {
+  .card {
+    padding: 10px;
+    font-size: 1rem;
+  }
+  iframe.card {
+    height: 90vh;
+    min-width: 90vw;
+  }
+}
     .cat-fact {
         font-size: 1.2rem;
         margin-bottom: 20px;
