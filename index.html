@@ -2,7 +2,11 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	
+	  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>IT-3350 Dashboard</title>
+
 	<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-YERRBBQCH5"></script>
 <script>
@@ -12,29 +16,35 @@
 
   gtag('config', 'G-YERRBBQCH5');
 </script>
+<style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      text-align: center;
+    }
 
-		<TITLE>
-			IT-3350 Dashboard
-		</TITLE>
+    .card {
+      width: 90%;
+      max-width: 600px;
+      height: 300px;
+      border: none;
+      margin: 20px auto;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      border-radius: 8px;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        height: 250px;
+      }
+    }
+  </style>
 	</HEAD>
-		
 	<BODY>
-		<CENTER><H3>Web Widget Dashboard</H3></CENTER>
+		<CENTER><H3>Web Widget Dashboard</H3>
 		<div class='cardContainer'>
-			<iframe class="card" scrolling="no" src="cards/clock.html"></iframe>
-			<iframe class="card" scrolling="no" src="cards/meme.html"></iframe>
-			<iframe class="card" scrolling="no" src="cards/random_dog.html"></iframe>
-			<iframe class="card" scrolling="no" src="cards/currency.html"></iframe>
-			<iframe class="card" scrolling="no" style='width:400px;' src="cards/temperature.html"></iframe>     
-			<iframe class="card" scrolling="no" src="cards/randomrecipe.html"></iframe>
-			<iframe class="card" scrolling="no" src="cards/nutritionix-api.html"></iframe>
-			<iframe class="card" scrolling="no" src="cards/Date$Time.html"></iframe>
-			<iframe class="card" scrolling="no" src="cards/newcard_arg-template1.html"></iframe>
-			<iframe class="card" scrolling="yes" style='width:400px;' src="cards/NIST-NVD.html"></iframe>
-			<iframe class="card" scrolling="no" src="cards/rt-apod.html"></iframe>
-			<iframe class="card" scrolling="no" src="cards/tron.html"></iframe>
-			<iframe class="card" scrolling="no" src="cards/dad_joke.html"></iframe>
-
+			<iframe class="card" scrolling="No"' src="cards/temperature.html"></iframe>
+		</CENTER>
 </div>
 	</BODY>
 </HTML>
