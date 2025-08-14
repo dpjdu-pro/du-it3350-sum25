@@ -1,24 +1,31 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <!-- Good to have for text encoding -->
+  <meta charset="UTF-8" />
+  <!-- Makes layout scale properly on phones/tablets -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <link rel="stylesheet" href="css/main.css">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <script src="js/utils.js"></script>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-10MPPHLD10"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HTSE6BH6RY"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-10MPPHLD10');
+    gtag('config', 'G-HTSE6BH6RY');
   </script>
+
   <title>IT-3350 Dashboard</title>
 
   <script>
     // Resize iframes dynamically based on their content
     function resizeIframes() {
+      if (document.body.classList.contains('single-card')) return;
+
       const iframes = document.querySelectorAll('iframe.card');
       iframes.forEach(iframe => {
         iframe.addEventListener('load', () => {
@@ -33,11 +40,17 @@
     }
     window.onload = resizeIframes;
   </script>
+
+  <style>
+    .centered { text-align: center; }
+  </style>
 </head>
 
-<body>
-  <center><h3>Web Widget Dashboard</h3></center>
+<!-- class enables fullscreen overrides in main.css just for this page -->
+<body class="single-card">
+  <div class="centered"><h3>Web Widget Dashboard</h3></div>
   <div class="cardContainer">
+    <!--
     <iframe class="card" scrolling="no" style="width:450px; height:650px;" src="cards/catsapi.html"></iframe>
     <iframe class="card" scrolling="no" src="cards/clock.html"></iframe>
     <iframe class="card" scrolling="no" src="cards/random_dog.html"></iframe>
@@ -54,8 +67,13 @@
     <iframe class="card" scrolling="yes" style='width:400px;' src="cards/NIST-NVD.html"></iframe>
     <iframe class="card" scrolling="no" src="cards/rt-apod.html"></iframe>
     <iframe class="card" scrolling="no" src="cards/dad_joke.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/zaid_pokemon.html"></iframe>
     <iframe class="card" scrolling="no" src="cards/newcard_derrick.html"></iframe>
-</div>
-	</BODY>
-</HTML>
+    -->
+
+    <!-- ONLY this card -->
+    <iframe class="card" scrolling="no" src="cards/zaid_pokemon.html" title="Pokémon Card"></iframe>
+  </div>
+
+  <footer>Powered By Google Analytics</footer>
+</body>
+</html>
