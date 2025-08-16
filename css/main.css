@@ -1,18 +1,130 @@
-.cardContainer {
-	display: flex;
-	flex: 1;
-	flex-wrap: wrap;
+/* ---- Reset/Base ---- */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #0f172a;
+  background: #f1f5f9;
 }
 
-iframe.card {
-	border-radius: 15px;
-	border-width: 2;
-	border-color: black;
-	border-style: solid;
-	width: 200px;
-	height: 200px;
-  	display: flex;
-  	justify-content: center;
-  	align-items: center;
-  	margin: 20px;
+/* Fluid design tokens */
+:root{
+  --space: clamp(12px, 2.5vw, 28px);
+  --radius: clamp(12px, 2vw, 28px);
+  --fs-body: clamp(0.98rem, 0.8vw + 0.6rem, 1.15rem);
+  --fs-h1: clamp(1.25rem, 2.2vw + 0.6rem, 2.2rem);
+  --fs-sub: clamp(0.95rem, 0.6vw + 0.5rem, 1.05rem);
+  --card-max: 1200px; /* can be 100% if you truly want edge-to-edge */
+}
+
+/* ---- Page fills viewport and centers card ---- */
+.page{
+  min-height: 100svh; /* safe viewport on mobile */
+  display: grid;
+  place-items: stretch; /* card will fill */
+}
+
+/* ---- Card that fills the whole page ---- */
+.card{
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: var(--space);
+  padding: calc(var(--space) * 1.25);
+  background: white;
+  min-height: 100svh; /* full page */
+  width: 100%;
+  max-width: none;   /* remove max if you used one before */
+  border-radius: 0;  /* full-bleed look; change to var(--radius) if you want rounded */
+  box-shadow: none;  /* remove drop shadow for full-page feel */
+}
+
+/* On wider screens, add some breathing room but still “fill” visually */
+@media (min-width: 900px){
+  .page{ place-items: center; }
+  .card{
+    min-height: calc(100svh - 6rem);
+    width: min(96vw, var(--card-max));
+    border-radius: var(--radius);
+    box-shadow: 0 6px 30px rgba(2, 6, 23, 0.12);
+  }
+}
+
+/* ---- Header ---- */
+.card__header h1{
+  margin: 0 0 calc(var(--space) * 0.3);
+  font-size: var(--fs-h1);
+  line-height: 1.15;
+}
+.card__subtitle{
+  margin: 0;
+  font-size: var(--fs-sub);
+  color: #475569;
+}
+
+/* ---- Media ---- */
+.card__media{
+  overflow: hidden;
+  border-radius: calc(var(--radius) * 0.75);
+}
+.card__media img{
+  width: 100%;
+  height: clamp(180px, 35vh, 420px);
+  object-fit: cover;
+  display: block;
+}
+
+/* ---- Content ---- */
+.card__content{
+  font-size: var(--fs-body);
+  line-height: 1.6;
+}
+.card__list{
+  display: grid;
+  gap: calc(var(--space) * 0.5);
+  padding-left: 1.1em;
+}
+
+/* On larger screens, split media and content side-by-side */
+@media (min-width: 900px){
+  .card{
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "header header"
+      "media content"
+      "footer footer";
+  }
+  .card__header{ grid-area: header; }
+  .card__media{ grid-area: media; height: 100%; }
+  .card__media img{ height: 100%; }
+  .card__content{ grid-area: content; }
+  .card__footer{ grid-area: footer; }
+}
+
+/* ---- Footer / Buttons ---- */
+.card__footer{
+  display: flex;
+  gap: var(--space);
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+.btn{
+  font: inherit;
+  font-weight: 600;
+  padding: .7em 1.1em;
+  border-radius: 999px;
+  border: 2px solid #0ea5e9;
+  background: #0ea5e9;
+  color: white;
+  cursor: pointer;
+}
+.btn--ghost{
+  background: transparent;
+  color: #0ea5e9;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  * { transition: none !important; animation: none !important; }
 }
