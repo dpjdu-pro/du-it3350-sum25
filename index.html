@@ -1,63 +1,43 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <link rel="stylesheet" href="css/main.css">
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="js/utils.js"></script>
-
-  <!-- GA -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-71RHKKC4X8"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date()); gtag('config', 'G-71RHKKC4X8');
-  </script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-10MPPHLD10"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date()); gtag('config', 'G-10MPPHLD10');
-  </script>
-
-  <title>IT-3350 Dashboard</title>
-  <script>
-    // Best-effort resize (same-origin only)
-    window.addEventListener('load', () => {
-      document.querySelectorAll('iframe.card').forEach(iframe => {
-        iframe.addEventListener('load', () => {
-          try {
-            const h = iframe.contentWindow.document.body.scrollHeight;
-            if (h) iframe.style.height = h + 'px';
-          } catch (_) { /* CORS or blocked; ignore */ }
-        });
-      });
-    });
-  </script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Single Responsive Card</title>
+  <link rel="stylesheet" href="css/main.css" />
 </head>
-
 <body>
-  <center><h3>Web Widget Dashboard</h3></center>
+  <main class="page">
+    <article class="card" role="region" aria-labelledby="card-title">
+      <header class="card__header">
+        <h1 id="card-title">Your Card Title</h1>
+        <p class="card__subtitle">Short description that scales fluidly</p>
+      </header>
 
-  <div class="cardContainer">
-    <iframe class="card" scrolling="yes" style="width:450px; height:650px;" src="cards/catsapi.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/clock.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/random_dog.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/tron.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/currency.html"></iframe>
-    <iframe class="card" scrolling="no" style="width:400px;" src="cards/temperature.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/randomrecipe.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/nutritionix-api.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/Date$Time.html"></iframe>
-    <iframe class="card" scrolling="yes" style="width:400px;" src="cards/NIST-NVD.html"></iframe>
-     <iframe class="card" scrolling="yes" style='width:400px;' src="cards/newcard_arg-template1.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/rt-apod.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/dad_joke.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/zaid_pokemon.html"></iframe>
-  </div>
+      <section class="card__media" aria-label="Visual">
+        <!-- Optional image; remove if not needed -->
+        <img src="https://picsum.photos/1600/900" alt="Decorative image" />
+      </section>
 
-  <footer>Powered By Google Analytics</footer>
+      <section class="card__content">
+        <p>
+          This card fills the entire page. Text, spacing, and media resize with the
+          browser/device size using <code>clamp()</code>, grid, and media queries.
+        </p>
+        <ul class="card__list">
+          <li>Fluid type & spacing</li>
+          <li>Viewport-aware layout</li>
+          <li>Stack on small, split on large</li>
+        </ul>
+      </section>
+
+      <footer class="card__footer">
+        <button class="btn">Primary Action</button>
+        <button class="btn btn--ghost">Secondary</button>
+      </footer>
+    </article>
+  </main>
 </body>
 </html>
 
