@@ -4,63 +4,116 @@
     <meta charset="UTF-8">
     <title>Date and Time Card</title>
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f0f8f8;
+        }
         .card {
-            width: 185px;
-            height: 185px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            padding: 10px;
+            width: 90vw;
+            max-width: 350px;
+            min-width: 220px;
+            height: auto;
+            border: 1px solid #252525;
+            border-radius: 15px;
+            padding: 16px;
             box-sizing: border-box;
             font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
+            background-color: #23a7a7;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
         .label {
             font-weight: bold;
-            font-size: 15px;
+            font-size: 1.1rem;
             margin: 0;
         }
         .value {
-            color: blue;
-            font-size: 14px;
+            color: rgb(68, 0, 255);
+            font-size: 1rem;
             margin: 4px 0 8px;
         }
         .button {
-            padding: 4px 8px;
-            font-size: 12px;
+            padding: 8px 16px;
+            font-size: 1rem;
             align-self: center;
+            border-radius: 8px;
+            border: none;
+            background: #fff;
+            color: #23a7a7;
+            cursor: pointer;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+            transition: background 0.2s, color 0.2s;
+        }
+        .button:hover {
+            background: #23a7a7;
+            color: #fff;
+        }
+        select.value {
+            width: 100%;
+            font-size: 1rem;
+            padding: 4px;
+            border-radius: 6px;
+            border: 1px solid #aaa;
+            margin-bottom: 8px;
+        }
+        @media (max-width: 500px) {
+            .card {
+                max-width: 98vw;
+                min-width: 0;
+                padding: 8px;
+            }
+            .label, .value, .button, select.value {
+                font-size: 0.95rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="card">
-		<center>
+        <center>
         <div>
+            <p class="label">Select Time Zone:</p>
+            <select id="timezone" class="value" onchange="loadDateTime()">
+                <option value="ip">Local (IP-based)</option>
+                <option value="Europe/London">Europe/London</option>
+                <option value="America/New_York">America/New_York</option>
+                <option value="Asia/Tokyo">Asia/Tokyo</option>
+                <option value="Australia/Sydney">Australia/Sydney</option>
+                <option value="UTC">UTC</option>
+            </select>
             <p class="label">Current Date:</p>
             <p id="date" class="value">Loading...</p>
             <p class="label">Current Time:</p>
             <p id="time" class="value">Loading...</p>
         </div>
-		</center>
+        </center>
         <button class="button" onclick="loadDateTime()">Refresh</button>
     </div>
 
     <script>
         async function loadDateTime() {
-			console.log("loadDateTime() called");
+            const tzSelect = document.getElementById('timezone');
+            const tz = tzSelect ? tzSelect.value : 'ip';
+            let url = '';
+            if (tz === 'ip') {
+                url = 'https://worldtimeapi.org/api/ip';
+            } else {
+                url = `https://worldtimeapi.org/api/timezone/${tz}`;
+            }
             try {
-				  console.log("Fetching from API...");
-                const res = await fetch('https://worldtimeapi.org/api/ip');
-				console.log("Response status:", res.status);
+                const res = await fetch(url);
                 const data = await res.json();
-				 console.log("API Data received:", data);
                 const dateTime = new Date(data.datetime);
-				 console.log("Parsed Date:", dateTime);
-                document.getElementById('date').textContent = dateTime.toLocaleDateString();
-                document.getElementById('time').textContent = dateTime.toLocaleTimeString();
-				 console.log("DOM updated successfully");
+                // Format date/time for selected time zone
+                document.getElementById('date').textContent = dateTime.toLocaleDateString('en-US', { timeZone: data.timezone });
+                document.getElementById('time').textContent = dateTime.toLocaleTimeString('en-US', { timeZone: data.timezone });
             } catch (err) {
                 console.error('Error fetching time:', err);
                 document.getElementById('date').textContent = 'Error';
