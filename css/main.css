@@ -1,22 +1,27 @@
-.cardContainer {
-  display: flex;
-  flex: 1;
-  flex-wrap: wrap;
+/* Full-page container for the iframe */
+.cardContainer{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:flex-start;
+  justify-content:center;
+  width:100vw;
+  height:100vh;
 }
 
-iframe.card {
-  border: 2px solid black;   /* shorthand with units */
-  border-radius: 15px;
-  width: 200px;
-  height: 200px;
-  margin: 20px;
-  /* display:flex; justify-content; align-items; won't affect iframe contents */
+/* Full-bleed iframe card */
+iframe.card{
+  width:100vw;
+  height:100vh;
+  margin:0;
+  box-sizing:border-box;
+  border:2px solid #000;
+  border-radius:15px;
 }
 
 /* Better color contrast (AA) */
 .btn{
   border-color:#0369a1;
-  background:#0369a1; /* good contrast vs white text */
+  background:#0369a1;
   color:#fff;
 }
 .btn--ghost{
@@ -26,7 +31,8 @@ iframe.card {
 }
 
 /* Clear keyboard focus */
-button:focus-visible, a:focus-visible{
+button:focus-visible,
+a:focus-visible{
   outline:3px solid #f59e0b;
   outline-offset:3px;
 }
@@ -37,4 +43,3 @@ button:focus-visible, a:focus-visible{
   width:1px;height:1px;padding:0;margin:-1px;
   overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
 }
-

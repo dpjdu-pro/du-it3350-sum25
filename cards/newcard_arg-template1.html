@@ -17,18 +17,29 @@
         margin: 0px;
     }
 
-    .card {
-        background-color: #bbddfb;
-        border: 2px solid #2379cf;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        padding: 20px;
-        max-width: 200px;
-        text-align: top;
-    }
-
+.card {
+  background-color: #bbddfb;
+  border: 2px solid #2379cf;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  max-width: 95vw;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: top;
+}
+@media (max-width: 600px) {
+  .card {
+    padding: 10px;
+    font-size: 1rem;
+  }
+  iframe.card {
+    height: 90vh;
+    min-width: 90vw;
+  }
+}
     .cat-fact {
-        font-size: 0.5rem;
+        font-size: 1.2rem;
         margin-bottom: 20px;
     }
 
@@ -45,18 +56,53 @@
     .button:hover {
         background-color: #ff1493;
     }
+.card-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.card-title {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+}   
 
     </style>
 </head>
 <body>
-
-    <div class="card">
-        <h2>
-            <p class="cat-fact">Loading...</p>
-            <button class="button" onclick="getCatFact()">New Fact</button>
-    </div>
-
+    <div class="card-wrapper">
+  <div class="card-title">
+    <h2>Cat Facts</h2>
+  </div>
+  <div class="card">
+    <p class="cat-fact">Loading...</p>
+    <button class="button" onclick="getCatFact()">New Fact</button>
+    <br><br>
+    <button class="button" onclick="increaseFontSize()">Font Bigger</button>
+    <button class="button" onclick="decreaseFontSize()">Font Smaller</button>
+    <br><br>
+    <button class="button" onclick="readFactAloud()">🔊 Hear Fact</button>
+  </div>
+</div>
     <script>
+        function readFactAloud() {
+    const fact = document.querySelector('.cat-fact').textContent;
+    const utterance = new SpeechSynthesisUtterance(fact);
+    window.speechSynthesis.speak(utterance);
+}
+        function increaseFontSize() {
+    const fact = document.querySelector('.cat-fact');
+    let currentSize = parseFloat(window.getComputedStyle(fact).fontSize);
+    fact.style.fontSize = (currentSize + 2) + "px";
+}
+
+function decreaseFontSize() {
+    const fact = document.querySelector('.cat-fact');
+    let currentSize = parseFloat(window.getComputedStyle(fact).fontSize);
+    if (currentSize > 8) { // Prevent font from getting too small
+        fact.style.fontSize = (currentSize - 2) + "px";
+    }
+}
         let lastFiveFacts = [];
 
         async function getCatFact() {
