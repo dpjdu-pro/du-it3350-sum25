@@ -1,61 +1,61 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="css/main.css">
+  <meta charset="UTF-8">
+  <title>Temperature Chart</title>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="../js/utils.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="js/utils.js"></script>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-10MPPHLD10"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-10MPPHLD10');
-  </script>
-  <title>IT-3350 Dashboard</title>
-
-  <script>
-    // Resize iframes dynamically based on their content
-    function resizeIframes() {
-      const iframes = document.querySelectorAll('iframe.card');
-      iframes.forEach(iframe => {
-        iframe.addEventListener('load', () => {
-          try {
-            const doc = iframe.contentWindow.document;
-            iframe.style.height = doc.body.scrollHeight + 'px';
-          } catch (e) {
-            console.warn('Could not access iframe content for resizing (CORS restriction).');
-          }
-        });
-      });
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #f4f4f4;
     }
-    window.onload = resizeIframes;
-  </script>
+    #tempChart {
+      max-width: 90%;
+      max-height: 70vh;
+    }
+  </style>
 </head>
-
 <body>
-  <center><h3>Web Widget Dashboard</h3></center>
-  <div class="cardContainer">
-    <iframe class="card" scrolling="no" style="width:450px; height:650px;" src="cards/catsapi.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/clock.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/random_dog.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/tron.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/currency.html"></iframe>
-    <iframe class="card" scrolling="no" style="width:400px;" src="cards/temperature.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/randomrecipe.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/nutritionix-api.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/quote.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/Date$Time.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/newcard_arg-template1.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/newcard_zaid.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/newcard_derrick.html"></iframe>
-    <iframe class="card" scrolling="yes" style='width:400px;' src="cards/NIST-NVD.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/rt-apod.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/dad_joke.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/zaid_pokemon.html"></iframe>
-    <iframe class="card" scrolling="no" src="cards/newcard_derrick.html"></iframe>
-</div>
-	</BODY>
-</HTML>
+  <canvas id="tempChart"></canvas>
+
+  <script>
+    const ctx = $('#tempChart');
+
+    getResponse('https://api.open-meteo.com/v1/forecast?latitude=39.6766174&longitude=-104.9618965&hourly=temperature_2m', (response) => {
+      var hourlyForecast = response.hourly;
+      var times = hourlyForecast.time;
+      var temps = hourlyForecast.temperature_2m;
+
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: times,
+          datasets: [{
+            label: 'Hourly Temperatures (°C)',
+            data: temps,
+            backgroundColor: 'rgba(255, 99, 132, 0.7)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: true, labels: { color: '#333', font: { size: 14 } } },
+            title: { display: true, text: 'Hourly Temperature Forecast', font: { size: 18 } }
+          },
+          scales: {
+            x: { ticks: { color: '#333', maxRotation: 90, minRotation: 45 } },
+            y: { ticks: { color: '#333', stepSize: 5 }, beginAtZero: true }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
