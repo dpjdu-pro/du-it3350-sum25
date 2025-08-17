@@ -11,34 +11,82 @@
   <main class="page">
     <article class="card" role="region" aria-labelledby="card-title">
       <header class="card__header">
-        <h1 id="card-title">Your Card Title</h1>
-        <p class="card__subtitle">Short description that scales fluidly</p>
+        <h1 id="card-title">Random Cat Generator 🐱</h1>
+        <p class="card__subtitle">Tap the button to fetch a new cat image.</p>
       </header>
 
-      <section class="card__media" aria-label="Visual">
-        <!-- Optional image; remove if not needed -->
-        <img src="https://picsum.photos/1600/900" alt="Decorative image" />
+      <section class="card__media" aria-live="polite">
+        <img id="catImg" src="https://picsum.photos/1200/800?blur=1"
+             alt="A random cat image will appear here." />
       </section>
 
       <section class="card__content">
         <p>
-          This card fills the entire page. Text, spacing, and media resize with the
-          browser/device size using <code>clamp()</code>, grid, and media queries.
+          Images are loaded from <code>thecatapi.com</code>. The layout uses fluid type,
+          spacing, and a responsive grid so everything adapts to your screen size.
         </p>
         <ul class="card__list">
-          <li>Fluid type & spacing</li>
-          <li>Viewport-aware layout</li>
-          <li>Stack on small, split on large</li>
+          <li>Full-page responsive card</li>
+          <li>Accessible loading &amp; error states</li>
+          <li>Keyboard-friendly controls</li>
         </ul>
       </section>
 
       <footer class="card__footer">
-        <button class="btn">Primary Action</button>
-        <button class="btn btn--ghost">Secondary</button>
+        <button id="newCatBtn" class="btn">Get Another Cat</button>
+        <a id="downloadBtn" class="btn btn--ghost" href="#" target="_blank" rel="noopener">
+          Open/Download Image
+        </a>
       </footer>
     </article>
   </main>
+
+  <script>
+    (function () {
+      const img = document.getElementById('catImg');
+      const btn = document.getElementById('newCatBtn');
+      const dl  = document.getElementById('downloadBtn');
+
+      async function getCat() {
+        try {
+          btn.disabled = true;
+          const prevSrc = img.src;
+          img.setAttribute('aria-busy', 'true');
+          img.alt = 'Loading a new cat…';
+
+          const res = await fetch('https://api.thecatapi.com/v1/images/search?size=full');
+          if (!res.ok) throw new Error('Network response was not ok');
+          const data = await res.json();
+          const url = data?.[0]?.url;
+          if (!url) throw new Error('No image returned');
+
+          const preload = new Image();
+          preload.onload = () => {
+            img.src = url;
+            img.alt = 'A random cat';
+            img.removeAttribute('aria-busy');
+            btn.disabled = false;
+
+            // set link target; note: some cross-origin images may ignore the "download" attribute
+            dl.href = url;
+          };
+          preload.onerror = () => { throw new Error('Image failed to load'); };
+          preload.src = url;
+
+          setTimeout(() => { if (img.src !== preload.src) img.src = prevSrc; }, 6000);
+        } catch (e) {
+          img.alt = 'Sorry, could not load a cat right now.';
+          btn.disabled = false;
+          console.error(e);
+        }
+      }
+
+      btn.addEventListener('click', getCat);
+      window.addEventListener('load', getCat);
+    })();
+  </script>
 </body>
 </html>
+
 
 
