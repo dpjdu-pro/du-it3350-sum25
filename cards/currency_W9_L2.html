@@ -1,39 +1,70 @@
-<HTML>
-	<HEAD>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Accessible Currency Converter</title>
 		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-		<script src="../js/utils.js"></script>
 		
 		<script>
 			var conversionMap = new Array();
 			// Web resources may change/disappear. Substitute as needed.
 			// https://github.com/fawazahmed0/exchange-api?tab=readme-ov-file
 			// discovered via https://publicapis.dev/category/currency-exchange
-			getResponse('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json', (response) => {
+			$.get('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json', (response) => {
 				for (const [key, value] of Object.entries(response.usd)) {
 					conversionMap[key] = value;
 				}
+				// Perform an initial computation in case the browser autofills the input
+				doComputation(); 
 			});
 
 			function doComputation() {
-				var result = $('#usdValue').val() * conversionMap[$('#currency').val()];
-				$('#endValue').val(result.toFixed(2));
+				var usdValue = parseFloat($('#usdValue').val());
+				if (isNaN(usdValue)) {
+					$('#conversionResult').text(''); // Clear result if input is not a number
+					return;
+				}
+				var targetCurrency = $('#currency').val();
+				var result = usdValue * conversionMap[targetCurrency];
+				
+				if (!isNaN(result)) {
+					// Update the content of the aria-live region to announce the result
+					$('#conversionResult').text(result.toFixed(2) + ' ' + targetCurrency.toUpperCase());
+				}
 			}
 		</script>
-	</HEAD>
-	<BODY>
+		<style>
+			/* Visually hide the labels, but keep them accessible to screen readers */
+			.visually-hidden {
+				position: absolute;
+				left: -10000px;
+				top: auto;
+				width: 1px;
+				height: 1px;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
 		<form style='text-align:center;'>
-			<p><B>Currency Converter</B></p>
+			<h1>Currency Converter</h1>
+			
+			<label for="usdValue" class="visually-hidden">US Dollars</label>
 			<input type='text' id='usdValue' style='width:60px;'
-				onkeyup="doComputation();" />
+				onkeyup="doComputation();" value="1.00" />
 				<span style='font-size:22px;'> USD</span>
-			<br/><span style='font-size:48px;'>=</span>
-			<br/>
-			<input type='text' id='endValue' style='width:60px;'> 
-			<SELECT id='currency' onchange="doComputation();">
-				<OPTION value='eur'>EUR</OPTION>
-				<OPTION value='gbp'>GBP</OPTION>
-				<OPTION value='chf'>CHF</OPTION>
-			</SELECT>
+			
+			<br/><span style='font-size:48px;'>=</span><br/>
+			
+			<span id="conversionResult" aria-live="polite" style="font-size: 22px; font-weight: bold;">
+			</span>
+			
+			<label for="currency" class="visually-hidden">Target Currency</label>
+			<select id='currency' onchange="doComputation();">
+				<option value='eur'>EUR</option>
+				<option value='gbp'>GBP</option>
+				<option value='chf'>CHF</option>
+			</select>
 		</form>
-	</BODY>
-</HTML>
+	</body>
+</html>
