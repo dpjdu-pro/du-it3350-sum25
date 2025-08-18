@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Cat API - Breed Filter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    img {
+      max-width: 400px;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      margin-top: 20px;
+    }
+    button, select {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    select {
+      width: 250px;
+    }
+    #msg { margin-top: 10px; color: #555; min-height: 1.2em; }
+  </style>
+</head>
+<body>
+  <h1>Cat Breed Selector 🐱</h1>
+
+  <div>
+    <label for="breed-select">Choose a breed:</label><br>
+    <select id="breed-select">
+      <option value="">-- Random --</option>
+    </select>
+  </div>
+
+  <div>
+    <button onclick="getCatByBreed()">Show Cat</button>
+  </div>
+
+  <div id="cat-container">
+    <img id="cat-image" src="" alt="Cat">
+    <div id="msg"></div>
+  </div>
+
+  <script>
+    const API_KEY = "live_AufUhdmyATJ9OTVBPKoCzAjOzIufukMLeMQJQQ5fA5dAj24nvGOCA6vtJYAo9IsK";
+    const BASE_URL = "https://api.thecatapi.com/v1";
+    const breedSelect = document.getElementById("breed-select");
+    const catImg = document.getElementById("cat-image");
+    const msgBox = document.getElementById("msg");
+
+    function setMsg(text) { msgBox.textContent = text || ""; }
+
+    // Safely parse JSON; surface helpful errors for non-JSON or error statuses
+    async function parseJsonOrThrow(res) {
+      const contentType = res.headers.get("content-type") || "";
+      const retryAfter = res.headers.get("retry-after");
+      if (!res.ok) {
+        // Non-2xx: try to read text body to show something meaningful
+        let body = "";
+        try { body = await res.text(); } catch {}
+        let base = `HTTP ${res.status} ${res.statusText}`;
+        if (res.status === 429 && retryAfter) base += ` (Retry-After: ${retryAfter}s)`;
+        throw new Error(`${base}${body ? ` — ${body.slice(0, 200)}` : ""}`);
+      }
+      // 2xx but might not be JSON (some APIs return HTML/text by mistake)
+      if (contentType.includes("application/json")) {
+        return res.json();
+      }
+      try {
+        return await res.json();
+      } catch (e) {
+        const txt = await res.text();
+        throw new Error(`Non-JSON response received — ${txt.slice(0, 200)}`);
+      }
+    }
+
+    // Load breeds into dropdown
+    async function loadBreeds() {
+      try {
+        const res = await fetch(`${BASE_URL}/breeds`, {
+          headers: { "x-api-key": API_KEY }
+        });
+        const breeds = await parseJsonOrThrow(res);
+        breeds.forEach(breed => {
+          const option = document.createElement("option");
+          option.value = breed.id;
+          option.textContent = breed.name;
+          breedSelect.appendChild(option);
+        });
+      } catch (err) {
+        console.error("Error loading breeds:", err);
+        if (String(err).includes("HTTP 429")) {
+          setMsg("⏳ Rate limited while loading breeds. Please wait a moment and try again.");
+        } else {
+          setMsg("⚠️ Could not load breeds. Try again later.");
+        }
+      }
+    }
+
+    // Get cat image by breed or random if no breed selected
+    async function getCatByBreed() {
+      const breedId = breedSelect.value;
+      const url = breedId
+        ? `${BASE_URL}/images/search?breed_ids=${breedId}`
+        : `${BASE_URL}/images/search`;
+
+      try {
+        setMsg("Loading…");
+        const res = await fetch(url, {
+          headers: { "x-api-key": API_KEY }
+        });
+        const data = await parseJsonOrThrow(res);
+
+        // Empty array handling
+        if (!Array.isArray(data) || data.length === 0) {
+          console.warn("No images found for this selection.");
+          catImg.src = "";
+          catImg.alt = "No cat found for this breed.";
+          setMsg("No cat image found for this selection. Try another breed.");
+          return;
+        }
+
+        // Missing URL field handling
+        const imgUrl = data[0]?.url;
+        if (!imgUrl) {
+          console.warn("Image object missing URL:", data[0]);
+          catImg.src = "";
+          catImg.alt = "Image missing.";
+          setMsg("Image data was incomplete. Try again.");
+          return;
+        }
+
+        catImg.onerror = () => setMsg("The image failed to load. Try again.");
+        catImg.src = imgUrl;
+        catImg.alt = "Cat";
+        setMsg("");
+      } catch (err) {
+        console.error("Error fetching cat:", err);
+        if (String(err).includes("HTTP 429")) {
+          setMsg("⏳ Rate limited fetching image. Please wait a moment and try again.");
+        } else if (String(err).includes("Non-JSON response")) {
+          setMsg("⚠️ Unexpected response from server. Please try again.");
+        } else {
+          setMsg("⚠️ Could not fetch a cat image right now.");
+        }
+      }
+    }
+
+    // Initialize
+    window.onload = async () => {
+
+      // OPTIONAL: SCOPED MOCK to simulate rate limiting (429) with non-JSON body.
+      // Enable this block for testing; disable (comment out) for production.
+      
+      const realFetch = window.fetch;
+      window.fetch = async (url, options) => {
+        if (typeof url === "string" && url.includes("/images/search")) {
+          // Simulate a plain-text 429 "Too Many Requests"
+          return new Response("Too Many Requests", {
+            status: 429,
+            headers: {
+              "Content-Type": "text/plain",
+              "Retry-After": "10"
+            }
+          });
+        }
+        return realFetch(url, options);
+      };
+      
+
+      // OPTIONAL: Use this alternative to simulate a 500 with HTML body instead.
+      
+      /*const realFetch = window.fetch;
+      window.fetch = async (url, options) => {
+        if (typeof url === "string" && url.includes("/images/search")) {
+          return new Response("<html><body><h1>500 Internal Server Error</h1></body></html>", {
+            status: 500,
+            headers: { "Content-Type": "text/html" }
+          });
+        }
+        return realFetch(url, options);
+      };
+      */
+
+      await loadBreeds();
+      await getCatByBreed(); // random (or mocked error) on load
+    };
+  </script>
+</body>
+</html>

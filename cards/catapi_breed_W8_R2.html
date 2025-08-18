@@ -1,0 +1,69 @@
+<script>
+  const API_KEY = "live_AufUhdmyATJ9OTVBPKoCzAjOzIufukMLeMQJQQ5fA5dAj24nvGOCA6vtJYAo9IsK";
+  const BASE_URL = "https://api.thecatapi.com/v1";
+  const breedSelect = document.getElementById("breed-select");
+
+  // Load breeds into dropdown
+  async function loadBreeds() {
+    console.log("Loading breeds from API...");
+    try {
+      const res = await fetch(`${BASE_URL}/breeds`, {
+        headers: { "x-api-key": API_KEY }
+      });
+      console.log("Breed API Response status:", res.status);
+
+      const breeds = await res.json();
+      console.log("Breeds data received:", breeds);
+
+      breeds.forEach(breed => {
+        const option = document.createElement("option");
+        option.value = breed.id;
+        option.textContent = breed.name;
+        breedSelect.appendChild(option);
+      });
+
+      console.log(`Total breeds loaded: ${breeds.length}`);
+    } catch (err) {
+      console.error("Error loading breeds:", err);
+    }
+  }
+
+  // Get cat image by breed or random if no breed selected
+  async function getCatByBreed() {
+    const breedId = breedSelect.value;
+    const url = breedId
+      ? `${BASE_URL}/images/search?breed_ids=${breedId}`
+      : `${BASE_URL}/images/search`;
+
+    console.log("Fetching cat image with breedId:", breedId, "URL:", url);
+
+    try {
+      const res = await fetch(url, {
+        headers: { "x-api-key": API_KEY }
+      });
+      console.log("Cat Image API Response status:", res.status);
+
+      const data = await res.json();
+      console.log("Cat image data received:", data);
+
+      // Pause execution here for inspection in Developer Tools
+      debugger;
+
+      if (data.length > 0 && data[0].url) {
+        document.getElementById("cat-image").src = data[0].url;
+        console.log("Cat image successfully set to:", data[0].url);
+      } else {
+        console.warn("No cat image returned from API.");
+      }
+    } catch (err) {
+      console.error("Error fetching cat:", err);
+    }
+  }
+
+  // Initialize
+  window.onload = async () => {
+    console.log("Page loaded. Initializing...");
+    await loadBreeds();
+    await getCatByBreed(); // show random cat on load
+  };
+</script>
