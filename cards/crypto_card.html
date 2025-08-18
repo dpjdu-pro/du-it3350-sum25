@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>CryptoCard (Sprint 2)</title>
+    <style>
+      :root {
+        --bg: #181a20;
+        --card: #222531;
+        --text: #e5e7ef;
+        --accent: #46c1c1;
+        --muted: #9aa4b2;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter,
+          sans-serif;
+        display: flex;
+        min-height: 100vh;
+        align-items: center;
+        justify-content: center;
+      }
+      .card {
+        width: min(560px, 92vw);
+        background: var(--card);
+        border-radius: 16px;
+        padding: 16px 16px 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      }
+      h1 {
+        font-size: 1.1rem;
+        margin: 0.25rem 0 1rem;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+      }
+      label {
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+      select,
+      input {
+        width: 100%;
+        padding: 0.7rem 0.75rem;
+        border-radius: 10px;
+        border: 1px solid #2b2f3a;
+        background: #1f2330;
+        color: var(--text);
+      }
+      .actions {
+        display: flex;
+        gap: 0.6rem;
+        margin-top: 0.5rem;
+      }
+      button {
+        border: 0;
+        border-radius: 10px;
+        padding: 0.6rem 0.9rem;
+        background: var(--accent);
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .hint {
+        margin-top: 0.4rem;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      .ok {
+        margin-top: 0.6rem;
+        color: #cfead9;
+      }
+      .hr {
+        height: 1px;
+        background: #2b2f3a;
+        margin: 1rem 0;
+      }
+      @media (min-width: 560px) {
+        .row {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>CryptoCard (Sprint 2)</h1>
+
+      <div class="row">
+        <div>
+          <label for="pair">Trading Pair</label>
+          <select id="pair" aria-label="Trading Pair">
+            <option value="BTCUSDT">BTC/USDT</option>
+            <option value="ETHUSDT">ETH/USDT</option>
+            <option value="SOLUSDT">SOL/USDT</option>
+          </select>
+        </div>
+        <div>
+          <label for="amount">Amount (USDT)</label>
+          <input
+            id="amount"
+            inputmode="decimal"
+            placeholder="e.g., 1200.50"
+            aria-describedby="amountHint"
+          />
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="validateBtn" type="button">Validate Amount</button>
+        <button
+          id="clearBtn"
+          type="button"
+          style="background: #2b2f3a; color: var(--accent)"
+        >
+          Clear
+        </button>
+      </div>
+      <div id="amountHint" class="hint">
+        Tip: try <code>-5</code> or <code>$1,2O0abc</code> to trigger edge
+        cases.
+      </div>
+      <div id="result" class="ok"></div>
+
+      <div class="hr"></div>
+      <p class="hint">
+        Per assignment: we use <code>alert()</code> to notify about unsupported
+        input.
+      </p>
+    </main>
+
+    <script>
+      // --- helpers ---
+      function sanitizeNumberLike(input) {
+        const s = String(input ?? "").trim();
+        if (!s) return { ok: false, reason: "empty" };
+
+        // strip currency symbols and commas users often paste
+        const cleaned = s.replace(/[\$,]/g, "");
+        // accept plain decimal / optional exponent / optional leading sign
+        if (!/^[+-]?\d*\.?\d+(e[+-]?\d+)?$/i.test(cleaned)) {
+          return { ok: false, reason: "nonnumeric", cleaned };
+        }
+        const num = Number(cleaned);
+        if (!Number.isFinite(num)) return { ok: false, reason: "notfinite" };
+        if (num < 0) return { ok: false, reason: "negative" };
+        if (num > 1e12) return { ok: false, reason: "toobig" }; // arbitrary upper bound for demo
+        return { ok: true, value: num, cleaned };
+      }
+
+      // --- wire up UI ---
+      const amountEl = document.getElementById("amount");
+      const validateBtn = document.getElementById("validateBtn");
+      const clearBtn = document.getElementById("clearBtn");
+      const resultEl = document.getElementById("result");
+
+      function showAlert(reason) {
+        switch (reason) {
+          case "empty":
+            alert("Please enter an amount.");
+            break;
+          case "nonnumeric":
+            alert("Please enter a valid number (e.g., 1200.50).");
+            break;
+          case "notfinite":
+            alert("Value is not finite.");
+            break;
+          case "negative":
+            alert("Amounts must be zero or positive.");
+            break;
+          case "toobig":
+            alert("Amount is too large. Please enter a smaller value.");
+            break;
+          default:
+            alert("Invalid amount.");
+        }
+      }
+
+      validateBtn.addEventListener("click", () => {
+        const res = sanitizeNumberLike(amountEl.value);
+        if (!res.ok) {
+          resultEl.textContent = "";
+          showAlert(res.reason);
+          return;
+        }
+        resultEl.textContent = `Accepted amount: ${res.value.toLocaleString(
+          undefined,
+          { maximumFractionDigits: 8 }
+        )} USDT`;
+      });
+
+      clearBtn.addEventListener("click", () => {
+        amountEl.value = "";
+        resultEl.textContent = "";
+        amountEl.focus();
+      });
+
+      // enable Enter key to validate
+      amountEl.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") validateBtn.click();
+      });
+    </script>
+  </body>
+</html>
