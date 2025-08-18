@@ -22,21 +22,24 @@
 	</HEAD>
 	<BODY>
 		<form style='text-align:center;'>
-			<p><B>Currency Converter</B></p>
-			<input type='text' id='usdValue' style='width:60px;'
-				onkeyup="doComputation();" />
-				<span style='font-size:22px;'> USD</span>
-			<br/><span style='font-size:48px;'>=</span>
-			<br/>
-			<input type='text' id='endValue' style='width:60px;'> 
-			<SELECT id='currency' onchange="doComputation();">
-				<OPTION value='eur'>EUR</OPTION>
-				<OPTION value='gbp'>GBP</OPTION>
-				<OPTION value='chf'>CHF</OPTION>
-				<OPTION value='jpy'>JPY</OPTION>
-				<OPTION value='cny'>CNY</OPTION>
-				<OPTION value='aud'>AUD</OPTION>
-			</SELECT>
-		</form>
+	<p><B>Currency Converter</B></p>
+	<input type='text' id='usdValue' style='width:60px;' />
+	<span style='font-size:22px;'> USD</span>
+	<br/><span style='font-size:48px;'>=</span><br/>
+	<input type='text' id='endValue' style='width:60px;'>
+	
+	<SELECT id='currency'>
+		<OPTION value='eur'>EUR</OPTION>
+		<OPTION value='gbp'>GBP</OPTION>
+		<OPTION value='chf'>CHF</OPTION>
+		<OPTION value='jpy'>JPY</OPTION>
+		<OPTION value='cny'>CNY</OPTION>
+		<OPTION value='aud'>AUD</OPTION>
+	</SELECT>
+
+	<br/><br/>
+	<input type="button" value="Convert" onclick="doComputation();" />
+</form>
 	</BODY>
 </HTML>
+
