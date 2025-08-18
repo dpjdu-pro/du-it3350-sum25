@@ -17,14 +17,13 @@
             flex-direction: column;
             justify-content: space-between;
         }
-        .label {
+        .label, .value {
             font-weight: bold;
-            font-size: 15px;
-            margin: 0;
+            font-size: 20px;
+            margin: 0 0 8px 0;
         }
         .value {
             color: blue;
-            font-size: 14px;
             margin: 4px 0 8px;
         }
         .button {
@@ -36,33 +35,24 @@
 </head>
 <body>
     <div class="card">
-		<center>
         <div>
             <p class="label">Current Date:</p>
             <p id="date" class="value">Loading...</p>
             <p class="label">Current Time:</p>
             <p id="time" class="value">Loading...</p>
         </div>
-		</center>
         <button class="button" onclick="loadDateTime()">Refresh</button>
     </div>
 
     <script>
         async function loadDateTime() {
-			console.log("loadDateTime() called");
             try {
-				  console.log("Fetching from API...");
                 const res = await fetch('https://worldtimeapi.org/api/ip');
-				console.log("Response status:", res.status);
                 const data = await res.json();
-				 console.log("API Data received:", data);
                 const dateTime = new Date(data.datetime);
-				 console.log("Parsed Date:", dateTime);
                 document.getElementById('date').textContent = dateTime.toLocaleDateString();
                 document.getElementById('time').textContent = dateTime.toLocaleTimeString();
-				 console.log("DOM updated successfully");
             } catch (err) {
-                console.error('Error fetching time:', err);
                 document.getElementById('date').textContent = 'Error';
                 document.getElementById('time').textContent = 'Error';
             }
