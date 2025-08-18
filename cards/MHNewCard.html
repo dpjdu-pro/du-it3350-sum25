@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Martelle Hudson</title>
+    <script>
+      function setLanguage(lang) {
+        if (lang === "en") {
+          document.getElementById("name").textContent = "Martelle Hudson";
+          document.getElementById("birthplace").textContent = "Birth Place: England";
+        } else if (lang === "es") {
+          document.getElementById("name").textContent = "Martelle Hudson";
+          document.getElementById("birthplace").textContent = "Lugar de nacimiento: Inglaterra";
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <select onchange="setLanguage(this.value)">
+      <option value="en">English (UK)</option>
+      <option value="es">Español</option>
+    </select>
+    <h1 id="name">Martelle Hudson</h1>
+    <p id="birthplace" style="color: purple;">Birth Place: England</p>

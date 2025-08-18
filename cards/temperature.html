@@ -3,33 +3,76 @@
 		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 		<script src="../js/utils.js"></script>
   		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<style>
+            /* Make chart label and legend font 20px */
+            #tempChart {
+                max-width: 100%;
+                max-height: 350px;
+            }
+        </style>
 	</HEAD>
 	<BODY>	
 		<div>
   			<canvas id="tempChart"></canvas>
 		</div>
-
 		<script>
-			const ctx = $('#tempChart');
-
+			const ctx = document.getElementById('tempChart').getContext('2d');
 			// Web resources may change/disappear. Substitute as needed.
 			// Hourly Temperature Forecast from OpenMeteo: https://open-meteo.com/
 			// discovered via https://publicapis.dev/category/weather
+				console.log('Fetching hourly temperature data...');
 			getResponse('https://api.open-meteo.com/v1/forecast?latitude=39.6766174&longitude=-104.9618965&hourly=temperature_2m', (response) => {
+				console.log('Date fetched successfully.');
+				console.log(response);
+				debugger; 
 				var hourlyForecast = response.hourly;
 				var times = hourlyForecast.time;
 				var temps = hourlyForecast.temperature_2m;
 				new Chart(ctx, {
-					type: 'line',
+					type: 'bar',
 					data: {
 						labels: times,
 						datasets: [{
 							label: 'Hourly Temperatures (in Celsius)',
 							data: temps,
 						}]		  
-					}
+					},
+					options: {
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    font: {
+                                        size: 20
+                                    }
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Hourly Temperatures (in Celsius)',
+                                font: {
+                                    size: 20
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: {
+                                    font: {
+                                        size: 20
+                                    }
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    font: {
+                                        size: 20
+                                    }
+                                }
+                            }
+                        }
+                    }
 				});
 			});
 		</script>
 	</BODY>
-</HTML>		
+</HTML>
