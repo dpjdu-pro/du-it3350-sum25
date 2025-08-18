@@ -5,8 +5,8 @@
 				width: 180px;
 				height: 180px;
 				border-radius: 100px;
-				border-width: 4px;
-				border-color: gray;
+				border-width: 8px;
+				border-color: blue;
 				border-style: solid;
 				position: relative;
 			}
@@ -20,8 +20,8 @@
 				left: 83px;
 			}
 			.numberText {
-				position: absolute;
-				color: blue;
+				position: absolute; 
+			   color: rgb(0, 149, 255);
 				font-weight: bold;
 				font-size: 24px;
 			}
@@ -47,7 +47,7 @@
 				position:absolute;
 				top: 40px;
 				left: 90px;
-				background-color: black;
+				background-color: rgb(0, 30, 255);
 				transform-origin: bottom;
 				transform: rotate(0deg);
 			}
@@ -57,7 +57,7 @@
 				position:absolute;
 				top: 20px;
 				left: 90px;
-				background-color: black;
+				background-color: rgb(0, 255, 38);
 				transform-origin: bottom;
 				transform: rotate(0deg);
 			}
@@ -67,7 +67,7 @@
 				position:absolute;
 				top: 5px;
 				left: 90px;
-				background-color: black;
+				background-color: rgb(0, 0, 0);
 				transform-origin: bottom;
 				transform: rotate(0deg);
 			}
@@ -81,9 +81,9 @@
 			<div class="minuteArm"></div>
 			<div class="secondArm"></div>
 			<div class="numberText twelve">12</div>	
-			<div class="numberText three">3</div>
-			<div class="numberText six">6</div>
-			<div class="numberText nine">9</div>
+			<div class="numberText three">5</div>
+			<div class="numberText six">8</div>
+			<div class="numberText nine">10</div>
 		</div>
 
 		<script>
@@ -93,9 +93,15 @@
 				var minutes = time.getMinutes();
 				var seconds = time.getSeconds();
 
-				$('.secondArm').css('transform', 'rotate(' + (360 * seconds / 60) + 'deg)');
-				$('.minuteArm').css('transform', 'rotate(' + (360 * minutes / 60) + 'deg)');
-				$('.hourArm').css('transform', 'rotate(' + (360 * hours / 12) + 'deg)');
+
+			   // Calculate hour hand with minute offset for smoothness
+			   var hourAngle = 30 * (hours % 12) + 0.5 * minutes;
+			   var minuteAngle = 6 * minutes + 0.1 * seconds;
+			   var secondAngle = 6 * seconds;
+
+			   $('.secondArm').css('transform', 'rotate(' + secondAngle + 'deg)');
+			   $('.minuteArm').css('transform', 'rotate(' + minuteAngle + 'deg)');
+			   $('.hourArm').css('transform', 'rotate(' + hourAngle + 'deg)');
 
 				console.log(seconds + ' seconds');
 			}
