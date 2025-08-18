@@ -156,7 +156,7 @@
     // Initialize
     window.onload = async () => {
 
-      // 🧪 OPTIONAL: SCOPED MOCK to simulate rate limiting (429) with non-JSON body.
+      // OPTIONAL: SCOPED MOCK to simulate rate limiting (429) with non-JSON body.
       // Enable this block for testing; disable (comment out) for production.
       
       const realFetch = window.fetch;
@@ -175,7 +175,7 @@
       };
       
 
-      // 🧪 OPTIONAL: Use this alternative to simulate a 500 with HTML body instead.
+      // OPTIONAL: Use this alternative to simulate a 500 with HTML body instead.
       
       /*const realFetch = window.fetch;
       window.fetch = async (url, options) => {
