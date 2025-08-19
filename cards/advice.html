@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Advice</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter,
+          sans-serif;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: #0b0f1a;
+        color: #eef2ff;
+      }
+      .card {
+        width: min(560px, 92vw);
+        background: #161b2b;
+        padding: 16px 18px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        display: grid;
+        gap: 0.75rem;
+      }
+      h1 {
+        margin: 0;
+        font-size: 18px;
+      }
+      #advice {
+        margin: 0;
+        line-height: 1.6;
+      }
+      .row {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      button {
+        border: 0;
+        border-radius: 10px;
+        padding: 0.6rem 0.9rem;
+        cursor: pointer;
+        font-weight: 700;
+        background: #46c1c1;
+        color: #042d2d;
+      }
+      .muted {
+        color: #a7b0c4;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>Advice</h1>
+      <p id="status" class="muted">Loading…</p>
+      <p id="advice">—</p>
+      <div class="row">
+        <button id="refreshBtn" type="button">New Advice</button>
+      </div>
+      <p class="muted">Source: api.adviceslip.com</p>
+    </main>
+
+    <script>
+      const adviceEl = document.getElementById("advice");
+      const statusEl = document.getElementById("status");
+      const refreshBtn = document.getElementById("refreshBtn");
+
+      async function loadAdvice() {
+        statusEl.textContent = "Loading…";
+        adviceEl.textContent = "—";
+        try {
+          // No custom headers → no CORS preflight. Cache-bust to avoid stale CDN responses.
+          const res = await fetch(
+            "https://api.adviceslip.com/advice?t=" + Date.now(),
+            { cache: "no-store" }
+          );
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          const data = await res.json(); // { slip: { id, advice } }
+          const text = data?.slip?.advice || "No advice available.";
+          adviceEl.textContent = "“" + text + "”";
+          statusEl.textContent = "Ready";
+        } catch (e) {
+          console.error(e);
+          statusEl.textContent = "Could not load advice. Try again.";
+        }
+      }
+
+      refreshBtn.addEventListener("click", loadAdvice);
+      loadAdvice(); // initial load
+    </script>
+  </body>
+</html>
