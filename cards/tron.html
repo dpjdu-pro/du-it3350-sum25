@@ -1,6 +1,32 @@
 <HTML>
 	<HEAD>
 		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	
+<!-- Add this in your <head> or before </body> -->
+<style>
+  body {
+    background: #fff;
+    color: #222;
+    font-size: 1.2em;
+    transition: background 0.3s, color 0.3s;
+  }
+  .dark-mode {
+    background: #181818;
+    color: #eee;
+  }
+  .high-contrast {
+    background: #000;
+    color: #FFD700; /* Neon yellow */
+    font-weight: bold;
+    border: 2px solid #FFD700;
+  }
+  #toggleMode {
+    margin: 1em;
+    padding: 0.5em 1em;
+    font-size: 1em;
+    cursor: pointer;
+  }
+</style>
 	</HEAD>
 	<BODY>	
 		<div onclick="loadBoard();" id='gamebox' tabindex='0' style='position:relative;'>
@@ -12,6 +38,72 @@
 		<canvas id='drawingArea' width=100 height=100 style='width:180px;height:180px;'>
 		</canvas>
 		</div>
+		<!-- Add this inside your <body> -->
+<button id="toggleMode" aria-label="Toggle high contrast or dark mode">Toggle Mode</button>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+	const btn = document.getElementById('toggleMode');
+	let mode = 0; // 0: normal, 1: dark, 2: high contrast
+
+	btn.addEventListener('click', () => {
+		document.body.classList.remove('dark-mode', 'high-contrast');
+		mode = (mode + 1) % 3;
+		if (mode === 1) {
+			document.body.classList.add('dark-mode');
+		} else if (mode === 2) {
+			document.body.classList.add('high-contrast');
+		}
+		// mode 0 is normal
+	});
+});
+</script>
+<!-- Example content -->
+<div id="tronContent">
+  <!-- ...existing content... -->
+  <canvas id="tronCanvas" width="100" height="100"></canvas>
+</div>
+
+<!-- Add this in your <head> or before </body> -->
+<style>
+  body {
+    background: #fff;
+    color: #222;
+    font-size: 1.2em;
+    transition: background 0.3s, color 0.3s;
+  }
+  .dark-mode {
+    background: #181818;
+    color: #eee;
+  }
+  .high-contrast {
+    background: #000;
+    color: #FFD700; /* Neon yellow */
+    font-weight: bold;
+    border: 2px solid #FFD700;
+  }
+  #toggleMode {
+    margin: 1em;
+    padding: 0.5em 1em;
+    font-size: 1em;
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  const btn = document.getElementById('toggleMode');
+  let mode = 0; // 0: normal, 1: dark, 2: high contrast
+
+  btn.addEventListener('click', () => {
+    document.body.classList.remove('dark-mode', 'high-contrast');
+    mode = (mode + 1) % 3;
+    if (mode === 1) {
+      document.body.classList.add('dark-mode');
+    } else if (mode === 2) {
+      document.body.classList.add('high-contrast');
+    }
+    // mode 0 is normal
+  });
+</script>
 
 		<script>
 			// Used for drawing the board.
@@ -172,7 +264,7 @@
 				// Create an image data array for a single pixel.
 				imageData = context.createImageData(1, 1);
 				// Set that single pixel to be blue.
-				setPixel(imageData, 0, 0, 0, 0, 255);
+				setPixel(imageData, 255, 255, 0, 0, 255);
 				// Commit the change by writing single pixel to the board at the current position of the player.
 				context.putImageData(imageData, player2X, player2Y);
 			}
